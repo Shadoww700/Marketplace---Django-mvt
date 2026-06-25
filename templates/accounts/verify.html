@@ -22,7 +22,7 @@
             </div>
         {% endif %}
 
-        <form method="POST" action="{% url 'verify_email' %}">
+        <form method="POST" action="">
             {% csrf_token %}
             
             <div class="form-group">
@@ -40,3 +40,4 @@
 
 </body>
 </html>
+
