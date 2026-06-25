@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from . import models
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import transaction
 
 def shop_home(req):
     products = models.Product.objects.all().select_related('category','seller' ).order_by('-created_at')
@@ -95,6 +96,7 @@ def create_product_view(req):
         title = req.POST.get('title', '').strip()
         category_id = req.POST.get('category')
         price = req.POST.get('price')
+        quantity = req.POST.get('quantity', 1)
         description = req.POST.get('description', '').strip()
         image = req.FILES.get('image')
 
@@ -111,6 +113,7 @@ def create_product_view(req):
                 title=title,
                 category=category,
                 price=price,
+                quantity = quantity,
                 description=description,
                 image=image,
                 seller=req.user 
@@ -130,3 +133,77 @@ def create_product_view(req):
             })
 
     return render(req, 'shop/create_product.html', {'categories': categories})
+
+
+@login_required
+@user_passes_test(is_admin, login_url='shop_home')
+def create_category_view(req):
+    if req.method == 'POST':
+        name = req.POST.get('name', '').strip()
+
+        if not name:
+            requests = models.SellerRequest.objects.filter(status='PENDING').select_related('user')
+            return render(req, 'shop/admin_requests.html', {
+                'requests': requests, 
+                'cat_error': 'Category name cannot be empty.'
+            })
+
+        if models.Category.objects.filter(name__iexact=name).exists():
+            requests = models.SellerRequest.objects.filter(status='PENDING').select_related('user')
+            return render(req, 'shop/admin_requests.html', {
+                'requests': requests, 
+                'cat_error': f'Sector "{name}" already exists in the system.'
+            })
+
+        models.Category.objects.create(name=name)
+        return redirect('shop_home')
+    return redirect('admin_requests')
+
+
+@login_required
+def buy_product_view(req, product_id):
+    if req.method == 'POST':
+        product = get_object_or_404(models.Product, id=product_id)
+
+        if product.seller == req.user:
+            categories = models.Category.objects.all()
+            products = models.Product.objects.all().select_related('category', 'seller').order_by('-created_at')
+            return render(req, 'shop/home.html', {
+                'products': products, 'categories': categories,
+                'purchase_error': "Matrix Protocol Violation: You cannot purchase your own merchandise."
+            })
+
+        buyer_profile = req.user.profile
+
+        if buyer_profile.balance < product.price:
+            categories = models.Category.objects.all()
+            products = models.Product.objects.all().select_related('category', 'seller').order_by('-created_at')
+            return render(req, 'shop/home.html', {
+                'products': products, 'categories': categories,
+                'purchase_error': f"Insufficient funds. Required: ${product.price} | Your Core Balance: ${buyer_profile.balance}"
+            })
+
+        with transaction.atomic():
+
+            buyer_profile.balance -= product.price
+            buyer_profile.save()
+
+            seller_profile = product.seller.profile
+            seller_profile.balance += product.price
+            seller_profile.save()
+
+            models.Order.objects.create(
+                user=req.user,
+                product=product,
+                total_price=product.price,
+                status='PAID'
+            )
+            if product.quantity > 1:
+                product.quantity -= 1
+                product.save()
+            else:
+                product.delete()
+
+        return redirect('shop_home')
+
+    return redirect('shop_home')
