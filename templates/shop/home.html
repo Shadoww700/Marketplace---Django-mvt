@@ -25,12 +25,15 @@
                         | Balance: <strong class="entity-balance">${{ user.profile.balance }}</strong>
                     </span>
 
-                    <!-- НОВАЯ КНОПКА ДЛЯ АДМИНА: Показывается ТОЛЬКО если вошел администратор сайта -->
+                    <!-- ЕСЛИ ВОШЕЛ ПРОДАВЕЦ: Показываем кнопку создания товара -->
+                    {% if user.profile.role == 'SELLER' %}
+                        <a href="{% url 'create_product' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #064e3b, #059669); border-color: #10b981;">Add Product</a>
+                    {% endif %}
+
                     {% if user.is_staff %}
                         <a href="{% url 'admin_requests' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #7c2d12, #ea580c); border-color: #f97316;">Admin Panel</a>
                     {% endif %}
 
-                    <!-- Кнопка для обычного покупателя -->
                     {% if user.profile.role == 'CUSTOMER' and not user.is_staff %}
                         <a href="{% url 'become_seller' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #1e1b4b, #4f46e5); box-shadow: none; border: 1px solid var(--glass-border);">Become a Seller</a>
                     {% endif %}
