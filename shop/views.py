@@ -183,8 +183,9 @@ def buy_product_view(req, product_id):
                 'purchase_error': f"Insufficient funds. Required: ${product.price} | Your Core Balance: ${buyer_profile.balance}"
             })
 
-        with transaction.atomic():
+       
 
+        with transaction.atomic():
             buyer_profile.balance -= product.price
             buyer_profile.save()
 
@@ -193,11 +194,13 @@ def buy_product_view(req, product_id):
             seller_profile.save()
 
             models.Order.objects.create(
-                user=req.user,
+                customer=req.user,
                 product=product,
                 total_price=product.price,
                 status='PAID'
             )
+
+            
             if product.quantity > 1:
                 product.quantity -= 1
                 product.save()
