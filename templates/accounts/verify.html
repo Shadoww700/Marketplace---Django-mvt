@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO•CORE - Verify Identity</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+</head>
+<body>
+
+    <div class="auth-container">
+        <h2 class="auth-title">Verification</h2>
+        
+        <p style="text-align: center; color: #94a3b8; margin-bottom: 25px; font-size: 14px;">
+            Enter the 6-digit security sequence generated in your terminal logs.
+        </p>
+
+        {% if error %}
+            <div class="error-box">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'verify_email' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="code">Security Code</label>
+                <input type="text" id="code" name="code" class="form-control" placeholder="X X X X X X" maxlength="6" style="text-align: center; font-size: 20px; letter-spacing: 5px;" required>
+            </div>
+
+            <button type="submit" class="cyber-btn">Verify & Activate</button>
+        </form>
+
+        <div class="auth-footer">
+            Didn't get the code? <a href="{% url 'register' %}">Restart Registry</a>
+        </div>
+    </div>
+
+</body>
+</html>
