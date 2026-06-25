@@ -19,7 +19,27 @@
             </div>
         </header>
 
-        <main class="showcase">
+        <section class="showcase" style="margin-bottom: 30px; padding: 30px; text-align: left;">
+            <h3 class="showcase-title" style="font-size: 18px; margin-bottom: 5px;">Initialize New Sector (Category)</h3>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">Deploy a new structural division into the market grid database.</p>
+
+            {% if cat_error %}
+                <div class="error-box" style="margin-bottom: 15px;">
+                    {{ cat_error }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'create_category' %}" style="display: flex; gap: 15px; align-items: flex-end;">
+                {% csrf_token %}
+                <div class="form-group" style="margin: 0; flex-grow: 1;">
+                    <label for="name" style="font-size: 11px;">Sector Designation Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="e.g., Cyberware, Neuroimplants" style="height: 42px;" required>
+                </div>
+                <button type="submit" class="cyber-btn" style="margin: 0; height: 42px; padding: 0 25px; white-space: nowrap; background: linear-gradient(45deg, #0284c7, #0369a1); border-color: #38bdf8;">Deploy Sector</button>
+            </form>
+        </section>
+
+        <main class="showcase" style="text-align: left;">
             <h2 class="showcase-title">Pending Merchant Applications</h2>
             <p class="showcase-subtitle">Review sequences submitted by entities requesting SELLER status.</p>
 
@@ -45,7 +65,7 @@
                         </div>
                     </div>
                 {% empty %}
-                    <div class="empty-matrix">
+                    <div class="empty-matrix" style="text-align: center;">
                         [ No pending merchant applications inside the core log. ]
                     </div>
                 {% endfor %}
