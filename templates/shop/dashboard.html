@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO•CORE - User Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body>
+
+    <div class="wrapper">
+        <header class="main-header">
+            <div class="logo">User Core Interface</div>
+            <div class="user-block">
+                <a href="{% url 'shop_home' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px;">Back to Market</a>
+            </div>
+        </header>
+
+        <main class="showcase" style="text-align: left;">
+            <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); padding: 25px; border-radius: 12px; margin-bottom: 30px;">
+                <h2 style="margin: 0 0 10px 0; color: #fff;">Entity: {{ user.username }}</h2>
+                <p style="margin: 5px 0; color: #94a3b8;">Security Access Role: <strong style="color: var(--neon-purple);">{{ profile.role }}</strong></p>
+                <p style="margin: 5px 0; color: #94a3b8;">Financial Core Balance: <strong style="color: #00ff66;">${{ profile.balance }}</strong></p>
+            </div>
+
+            <h3 class="showcase-title" style="font-size: 20px; margin-bottom: 15px;">Your Purchase History</h3>
+            <div style="margin-bottom: 40px;">
+                {% for order in purchases %}
+                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #fff;">{{ order.product.title }}</strong>
+                            <span style="color: #475569; margin-left: 10px;">ID: #{{ order.id }}</span>
+                        </div>
+                        <div>
+                            <span style="color: #00ff66; font-weight: bold; margin-right: 15px;">${{ order.total_price }}</span>
+                            <span style="color: #94a3b8; font-size: 12px;">{{ order.created_at|date:"Y-m-d H:i" }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p style="color: #475569;">[ No purchase operations detected in your log. ]</p>
+                {% endfor %}
+            </div>
+
+            {% if profile.role == 'SELLER' %}
+                <h3 class="showcase-title" style="font-size: 20px; margin-bottom: 15px;">Your Sales Logs</h3>
+                <div>
+                    {% for sale in sales %}
+                        <div style="background: rgba(6, 78, 59, 0.1); border: 1px solid #064e3b; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #fff;">{{ sale.product.title }}</strong>
+                                <span style="color: #94a3b8; margin-left: 10px;">Bought by: <strong>{{ sale.user.username }}</strong></span>
+                            </div>
+                            <div>
+                                <span style="color: #00ff66; font-weight: bold; margin-right: 15px;">+${{ sale.total_price }}</span>
+                                <span style="color: #94a3b8; font-size: 12px;">{{ sale.created_at|date:"Y-m-d H:i" }}</span>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p style="color: #475569;">[ No entity has purchased your merchandise yet. ]</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+</body>
+</html>
