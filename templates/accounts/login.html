@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO•CORE - Sign In</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+</head>
+<body>
+
+    <div class="auth-container">
+        <h2 class="auth-title">Login</h2>
+
+        {% if error %}
+            <div class="error-box">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="cyber-btn">Access Matrix</button>
+        </form>
+
+        <div class="auth-footer">
+            New entity? <a href="{% url 'register' %}">Create Account</a>
+        </div>
+    </div>
+
+</body>
+</html>

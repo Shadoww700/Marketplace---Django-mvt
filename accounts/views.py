@@ -74,7 +74,7 @@ def verify_email(req, username):
 
                 confirm_record.delete()
 
-                login(user, user)
+                login(req, user)
                 
                 return redirect('shop_home')
             else:
