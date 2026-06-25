@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from . import models
+from django.core.mail import send_mail
+from django.conf import settings
 import random
 
 
@@ -33,9 +35,18 @@ def register(req):
         verifications_code = str(random.randint(100000,999999))
         models.EmailConfirm.objects.update_or_create(user=user, defaults={'code':verifications_code})
 
+        send_mail(
+            subject='Confirm your account',
+            message=f"You verifycation code {verifications_code} - don't show it to someone",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email]
+        )
+
         print("\n" + '='*30)
         print(f'Email confirmation send to : {user.email}')
         print(f'Code >>> {verifications_code} <<<')
         print('='*30 + '\n')
+        
+        return redirect('verify_email')
 
     return render(req, 'accounts/register.html')
