@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . import models
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 def shop_home(req):
     products = models.Product.objects.all().select_related('category','seller' ).order_by('-created_at')
@@ -39,3 +39,43 @@ def become_seller_view(req):
         )
         return redirect('shop_home')
     return render(req, 'shop/become_seller.html')
+
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+@login_required
+@user_passes_test(is_admin, login_url='shop_home')
+
+def admin_requests_list(req):
+    requests = models.SellerRequest.objects.filter(status='PENDING').select_related('user')
+    return render(req, 'shop/admin_requests.html', {'requests': requests})
+
+
+@login_required
+@user_passes_test(is_admin, login_url='shop_home')
+def approve_seller(req, request_id):
+    if req.method == 'POST':
+        seller_request = get_object_or_404(models.SellerRequest, id=request_id)
+        
+        seller_request.status = 'APPROVED'
+        seller_request.save()
+
+        profile, created = models.Profile.objects.get_or_create(user=seller_request.user)
+        profile.role = 'SELLER'
+        profile.save()
+
+    return redirect('admin_requests')
+
+
+@login_required
+@user_passes_test(is_admin, login_url='shop_home')
+def reject_seller(req, request_id):
+    if req.method == 'POST':
+        seller_request = get_object_or_404(models.SellerRequest, id=request_id)
+        
+        seller_request.status = 'REJECTED'
+        seller_request.save()
+
+    return redirect('admin_requests')
