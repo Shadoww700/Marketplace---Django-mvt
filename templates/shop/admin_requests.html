@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO•CORE - Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body>
+
+    <div class="wrapper">
+        <header class="main-header">
+            <div class="logo">Core Control Panel</div>
+            <div class="user-block">
+                <span class="entity-info">Admin: <strong class="entity-name">{{ user.username }}</strong></span>
+                <a href="{% url 'shop_home' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px;">Market View</a>
+            </div>
+        </header>
+
+        <main class="showcase">
+            <h2 class="showcase-title">Pending Merchant Applications</h2>
+            <p class="showcase-subtitle">Review sequences submitted by entities requesting SELLER status.</p>
+
+            <div style="margin-top: 20px;">
+                {% for r in requests %}
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 16px;">User: {{ r.user.username }} ({{ r.user.email }})</h4>
+                            <p style="margin: 0; color: #94a3b8; font-size: 14px;"><strong>Message:</strong> {{ r.message }}</p>
+                            <small style="color: #475569;">Submitted: {{ r.created_at|date:"Y-m-d H:i" }}</small>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <form method="POST" action="{% url 'approve_seller' r.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="buy-btn" style="border-color: #00ff66; color: #00ff66;">Approve</button>
+                            </form>
+
+                            <form method="POST" action="{% url 'reject_seller' r.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="logout-btn">Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="empty-matrix">
+                        [ No pending merchant applications inside the core log. ]
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
