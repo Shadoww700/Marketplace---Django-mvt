@@ -74,8 +74,59 @@ def approve_seller(req, request_id):
 def reject_seller(req, request_id):
     if req.method == 'POST':
         seller_request = get_object_or_404(models.SellerRequest, id=request_id)
-        
+
         seller_request.status = 'REJECTED'
         seller_request.save()
 
     return redirect('admin_requests')
+
+
+
+def is_seller(user):
+    return user.is_authenticated and hasattr(user, 'profile') and user.profile.role == 'SELLER'
+
+@login_required
+@user_passes_test(is_seller, login_url='shop_home')
+def create_product_view(req):
+
+    categories =models.Category.objects.all()
+
+    if req.method == 'POST':
+        title = req.POST.get('title', '').strip()
+        category_id = req.POST.get('category')
+        price = req.POST.get('price')
+        description = req.POST.get('description', '').strip()
+        image = req.FILES.get('image')
+
+        if not title or not category_id or not price or not description:
+            return render(req, 'shop/create_product.html', {
+                'error': 'All technical fields are required.',
+                'categories': categories
+            })
+
+        try:
+            category = models.Category.objects.get(id=category_id)
+            
+            models.Product.objects.create(
+                title=title,
+                category=category,
+                price=price,
+                description=description,
+                image=image,
+                seller=req.user 
+            )
+            
+            return redirect('shop_home')
+
+        except models.Category.DoesNotExist:
+            return render(req, 'shop/create_product.html', {
+                'error': 'Selected sector does not exist.',
+                'categories': categories
+            })
+        except Exception as e:
+            return render(req, 'shop/create_product.html', {
+                'error': f'Database error: {str(e)}',
+                'categories': categories
+            })
+
+    return render(req, 'shop/create_product.html', {'categories': categories})
