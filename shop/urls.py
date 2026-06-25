@@ -9,4 +9,6 @@ urlpatterns = [
     path('dashboard/requests/', views.admin_requests_list, name='admin_requests'),
     path('dashboard/requests/<int:request_id>/approve/', views.approve_seller, name='approve_seller'),
     path('dashboard/requests/<int:request_id>/reject/', views.reject_seller, name='reject_seller'),
+    path('dashboard/category/add/', views.create_category_view, name='create_category'),
+    path('product/<int:product_id>/buy/', views.buy_product_view, name='buy_product'),
 ]
