@@ -83,3 +83,30 @@ def verify_email(req, username):
             return render(req, 'accounts/verify.html', {'error':'User not exists'})
         
     return render(req, 'accounts/verify.html')
+
+
+def user_login(req):
+    if req.user.is_authenticated:
+        return redirect('shop_home')
+
+    if req.method == 'POST':
+        username = req.POST.get('username', '').strip()
+        password = req.POST.get('password', '')
+
+        if not username or not password:
+            return render(req, 'accounts/login.html', {'error': 'Please provide both username and password.'})
+
+        user = authenticate(req, username=username, password=password)
+
+        if user is not None:
+            login(req, user)
+            return redirect('shop_home')
+        else:
+            return render(req, 'accounts/login.html', {'error': 'Invalid credentials or account not activated.'})
+
+    return render(req, 'accounts/login.html')
+
+
+def user_logout(req):
+    logout(req)
+    return redirect('login')
