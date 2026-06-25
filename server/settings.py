@@ -123,3 +123,16 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+import os
+from pathlib import Path
+from dotenv import load_dotenv 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-your-fallback-key') 
+
+AI_API_KEY = os.getenv('AI_API_KEY')
