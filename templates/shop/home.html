@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
 <body>
+    Entity: <strong class="entity-name">{{ user.username }}</strong>
+
+    Entity: <a href="{% url 'profile_dashboard' %}" class="entity-name" style="text-decoration: underline; color: #fff;">{{ user.username }}</a>
 
     <div class="wrapper">
         <!-- Шапка авторизации -->

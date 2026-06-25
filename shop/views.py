@@ -207,3 +207,22 @@ def buy_product_view(req, product_id):
         return redirect('shop_home')
 
     return redirect('shop_home')
+
+
+from .models import Order
+
+@login_required
+def profile_dashboard_view(req):
+    
+    user_profile = req.user.profile
+    my_purchases = Order.objects.filter(user=req.user).select_related('product').order_by('-created_at')
+    
+    my_sales = None
+    if user_profile.role == 'SELLER':
+        my_sales = Order.objects.filter(product__seller=req.user).select_related('product', 'user').order_by('-created_at')
+
+    return render(req, 'shop/dashboard.html', {
+        'profile': user_profile,
+        'purchases': my_purchases,
+        'sales': my_sales
+    })
