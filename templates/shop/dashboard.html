@@ -50,7 +50,8 @@
                         <div style="background: rgba(6, 78, 59, 0.1); border: 1px solid #064e3b; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <strong style="color: #fff;">{{ sale.product.title }}</strong>
-                                <span style="color: #94a3b8; margin-left: 10px;">Bought by: <strong>{{ sale.user.username }}</strong></span>
+                                <!-- ИСПРАВЛЕНО ТУТ: Заменили sale.user на sale.customer 👇 -->
+                                <span style="color: #94a3b8; margin-left: 10px;">Bought by: <strong>{{ sale.customer.username }}</strong></span>
                             </div>
                             <div>
                                 <span style="color: #00ff66; font-weight: bold; margin-right: 15px;">+${{ sale.total_price }}</span>
