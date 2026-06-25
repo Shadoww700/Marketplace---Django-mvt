@@ -5,30 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO•CORE - Marketplace</title>
-    <!-- Основные стили авторизации и темы -->
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
-    <!-- Специфичные стили магазина -->
     <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
 <body>
-    Entity: <strong class="entity-name">{{ user.username }}</strong>
-
-    Entity: <a href="{% url 'profile_dashboard' %}" class="entity-name" style="text-decoration: underline; color: #fff;">{{ user.username }}</a>
 
     <div class="wrapper">
-        <!-- Шапка авторизации -->
         <header class="main-header">
             <div class="logo">NEO•CORE</div>
             
             <div class="user-block">
                 {% if user.is_authenticated %}
                     <span class="entity-info">
-                        Entity: <strong class="entity-name">{{ user.username }}</strong> 
+                        Entity: <a href="{% url 'profile_dashboard' %}" class="entity-name" style="text-decoration: underline; color: #fff; font-weight: bold;">{{ user.username }}</a> 
                         (<span style="color: var(--neon-purple); font-size: 12px;">{{ user.profile.role }}</span>)
                         | Balance: <strong class="entity-balance">${{ user.profile.balance }}</strong>
                     </span>
 
-                    <!-- ЕСЛИ ВОШЕЛ ПРОДАВЕЦ: Показываем кнопку создания товара -->
                     {% if user.profile.role == 'SELLER' %}
                         <a href="{% url 'create_product' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #064e3b, #059669); border-color: #10b981;">Add Product</a>
                     {% endif %}
@@ -48,7 +41,6 @@
             </div>
         </header>
 
-        <!-- Панель категорий -->
         <div class="category-bar">
             <div class="category-chip active" data-category="all">All Sectors</div>
             {% for category in categories %}
@@ -56,10 +48,15 @@
             {% endfor %}
         </div>
 
-        <!-- Витрина товаров -->
         <main class="showcase">
             <h2 class="showcase-title">Marketplace Core Lined Up</h2>
             <p class="showcase-subtitle">Novelty Algorithm: Active (order_by('-created_at'))</p>
+
+            {% if purchase_error %}
+                <div class="error-box" style="margin-bottom: 25px;">
+                    {{ purchase_error }}
+                </div>
+            {% endif %}
 
             <div class="products-grid">
                 {% for product in products %}
@@ -75,12 +72,17 @@
                         
                         <div class="product-info">
                             <span class="product-category">{{ product.category.name }}</span>
+                            <span style="color: #64748b; font-size: 11px; float: right;">Stock: {{ product.quantity }} u.</span>
                             <h3 class="product-title">{{ product.title }}</h3>
                             <p class="product-description">{{ product.description|truncatewords:15 }}</p>
                             
                             <div class="product-footer">
                                 <span class="product-price">${{ product.price }}</span>
-                                <button class="buy-btn">Purchase</button>
+                                
+                                <form method="POST" action="{% url 'buy_product' product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="buy-btn">Purchase</button>
+                                </form>
                             </div>
                         </div>
                     </article>
