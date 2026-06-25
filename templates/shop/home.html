@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO•CORE - Marketplace</title>
+    <!-- Основные стили авторизации и темы -->
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <!-- Специфичные стили магазина -->
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Шапка авторизации -->
+        <header class="main-header">
+            <div class="logo">NEO•CORE</div>
+            
+            <div class="user-block">
+                {% if user.is_authenticated %}
+                    <span class="entity-info">
+                        Entity: <strong class="entity-name">{{ user.username }}</strong> 
+                        | Balance: <strong class="entity-balance">${{ user.profile.balance }}</strong>
+                    </span>
+                    <a href="{% url 'logout' %}" class="logout-btn">Disconnect</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="cyber-btn">Sign In</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Панель категорий -->
+        <div class="category-bar">
+            <div class="category-chip active" data-category="all">All Sectors</div>
+            {% for category in categories %}
+                <div class="category-chip" data-category="{{ category.id }}">{{ category.name }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Витрина товаров -->
+        <main class="showcase">
+            <h2 class="showcase-title">Marketplace Core Lined Up</h2>
+            <p class="showcase-subtitle">Novelty Algorithm: Active (order_by('-created_at'))</p>
+
+            <div class="products-grid">
+                {% for product in products %}
+                    <article class="product-card">
+                        <div class="product-image-wrapper">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
+                            {% else %}
+                                <div class="product-image" style="background: #1e293b; display: flex; align-items: center; justify-content: center; height: 100%; color: #475569;">No Image</div>
+                            {% endif %}
+                            <span class="product-badge">New Entry</span>
+                        </div>
+                        
+                        <div class="product-info">
+                            <span class="product-category">{{ product.category.name }}</span>
+                            <h3 class="product-title">{{ product.title }}</h3>
+                            <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+                            
+                            <div class="product-footer">
+                                <span class="product-price">${{ product.price }}</span>
+                                <button class="buy-btn">Purchase</button>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="empty-matrix">
+                        [ Matrix is empty. No cybernetic goods detected in the database yet. ]
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/shop.js' %}"></script>
+</body>
+</html>
