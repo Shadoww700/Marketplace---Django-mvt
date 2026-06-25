@@ -2,7 +2,6 @@ from django.contrib import admin
 from . import models
 from django.contrib.auth.admin import UserAdmin
 
-
 @admin.register(models.CustomUser)
 class CustomUserAdmin(UserAdmin):
     list_display = ('id', 'username', 'email', 'is_staff', 'is_active')
@@ -10,6 +9,6 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('id',)
 
 
-admin.register(models.EmailConfirm)
+@admin.register(models.EmailConfirm)
 class EmailConfirmAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'code')
