@@ -2,18 +2,66 @@ from django.shortcuts import render, redirect, get_object_or_404
 from . import models
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
+import os
+import random
+from groq import Groq
+from dotenv import load_dotenv
+load_dotenv()
+
+AI_API_KEY = os.getenv('AI_API_KEY')
+groq_client = Groq(api_key=AI_API_KEY)
+
+
+
 
 def shop_home(req):
-    products = models.Product.objects.all().select_related('category','seller' ).order_by('-created_at')
     categories = models.Category.objects.all()
+    products = models.Product.objects.all().select_related('category', 'seller').order_by('-created_at')
+    
+    ai_response = None
+    ai_query = req.GET.get('ai_query', '').strip()
 
-    if req.user.is_authenticated:
-        req.user = req.user.__class__.objects.select_related('profile').get(pk=req.user.pk)
+    if ai_query:
+        if req.user.is_authenticated:
+            user_profile = req.user.profile
+            my_purchases = models.Order.objects.filter(customer=req.user)
+            total_spent = sum(order.total_price for order in my_purchases)
+            purchase_count = my_purchases.count()
+            balance = user_profile.balance
+
+            system_prompt = (
+                "Ты — продвинутый ИИ-терминал финансовой разведки в даркнет-маркетплейсе будущего (стиль киберпанк). "
+                "Твоя задача — отвечать на запросы пользователя кратко, емко, используя технический/хакерский сленг, "
+                "логирование, статус-коды вроде [SYSTEM READY], [ACCESS GRANTED], [CRITICAL]. "
+                f"Текущий пользователь системы: {req.user.username}. "
+                f"Его финансовые данные из базы данных: баланс = ${balance}, совершено покупок = {purchase_count}, общая сумма трат = ${total_spent}. "
+                "Отвечай строго на русском языке, держи стиль мрачного, но полезного ИИ-ассистента."
+            )
+
+            try:
+                # Отправляем запрос, используя уже готовый groq_client
+                chat_completion = groq_client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": ai_query}
+                    ],
+                    model="llama3-8b-8192",
+                    temperature=0.7,
+                    max_tokens=300,
+                )
+                ai_response = chat_completion.choices[0].message.content
+            except Exception as e:
+                ai_response = f"❌ [HARDWARE ERROR] Ошибка подключения к нейросети: {str(e)}"
+        else:
+            ai_response = "❌ [ACCESS DENIED] Для подключения к ИИ-Ядру финансовой разведки необходимо авторизоваться в системе."
 
     return render(req, 'shop/home.html', {
+        'categories': categories,
         'products': products,
-        'categories': categories
+        'ai_response': ai_response,
+        'ai_query': ai_query
     })
+      
 
 
 @login_required
@@ -215,15 +263,19 @@ def buy_product_view(req, product_id):
 @login_required
 def profile_dashboard_view(req):
     user_profile = req.user.profile
-
+    
     my_purchases = models.Order.objects.filter(customer=req.user).select_related('product').order_by('-created_at')
     
+    my_products = None
     my_sales = None
+    
     if user_profile.role == 'SELLER':
+        my_products = models.Product.objects.filter(seller=req.user).select_related('category').order_by('-created_at')
         my_sales = models.Order.objects.filter(product__seller=req.user).select_related('product', 'customer').order_by('-created_at')
 
     return render(req, 'shop/dashboard.html', {
         'profile': user_profile,
         'purchases': my_purchases,
+        'products': my_products,
         'sales': my_sales
     })
