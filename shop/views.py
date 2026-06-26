@@ -278,3 +278,17 @@ def profile_dashboard_view(req):
         'products': my_products,
         'sales': my_sales
     })
+
+
+
+
+from .models import Product
+@login_required
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id, seller=request.user)
+    
+    if request.method == 'POST':
+        product.delete()
+        return redirect('profile_dashboard')
+        
+    return render(request, 'shop/delete.html', {'product': product})
