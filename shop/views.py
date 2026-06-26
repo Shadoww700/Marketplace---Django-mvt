@@ -38,7 +38,6 @@ def shop_home(req):
             )
 
             try:
-                # Отправляем запрос, используя уже готовый groq_client
                 chat_completion = groq_client.chat.completions.create(
                     messages=[
                         {"role": "system", "content": system_prompt},
@@ -93,9 +92,11 @@ def become_seller_view(req):
 def is_admin(user):
     return user.is_authenticated and user.is_staff
 
+
+
+
 @login_required
 @user_passes_test(is_admin, login_url='shop_home')
-
 def admin_requests_list(req):
     requests = models.SellerRequest.objects.filter(status='PENDING').select_related('user')
     return render(req, 'shop/admin_requests.html', {'requests': requests})
@@ -230,32 +231,24 @@ def buy_product_view(req, product_id):
                 'purchase_error': f"Insufficient funds. Required: ${product.price} | Your Core Balance: ${buyer_profile.balance}"
             })
 
-       
-
         with transaction.atomic():
             buyer_profile.balance -= product.price
             buyer_profile.save()
-
             seller_profile = product.seller.profile
             seller_profile.balance += product.price
             seller_profile.save()
-
             models.Order.objects.create(
                 customer=req.user,
                 product=product,
                 total_price=product.price,
                 status='PAID'
             )
-
-            
             if product.quantity > 1:
                 product.quantity -= 1
                 product.save()
             else:
                 product.delete()
-
         return redirect('shop_home')
-
     return redirect('shop_home')
 
 
