@@ -6,7 +6,6 @@ import os
 import random
 from groq import Groq
 from dotenv import load_dotenv
-load_dotenv()
 
 AI_API_KEY = os.getenv('AI_API_KEY')
 groq_client = Groq(api_key=AI_API_KEY)
@@ -45,7 +44,7 @@ def shop_home(req):
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": ai_query}
                     ],
-                    model="llama3-8b-8192",
+                    model="llama-3.1-8b-instant",
                     temperature=0.7,
                     max_tokens=300,
                 )
