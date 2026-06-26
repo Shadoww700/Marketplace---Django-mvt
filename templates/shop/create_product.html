@@ -6,63 +6,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO•CORE - Add Cyber Product</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
-<body>
+<body class="neo-core-ambient">
 
-    <div class="auth-container" style="max-width: 550px;">
-        <h2 class="auth-title">List New Product</h2>
-        
-        {% if error %}
-            <div class="error-box">
-                {{ error }}
-            </div>
-        {% endif %}
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
 
-        <!-- enctype важен для загрузки файлов! -->
-        <form method="POST" action="{% url 'create_product' %}" enctype="multipart/form-data">
-            {% csrf_token %}
+    <div class="wrapper flex-center-container">
+        <div class="auth-container glass-panel add-product-shell">
+            <div class="profile-glitch-line"></div>
             
-            <div class="form-group">
-                <label for="title">Product Title</label>
-                <input type="text" id="title" name="title" class="form-control" placeholder="e.g., Quantum Processor v9" required>
-            </div>
+            <h2 class="auth-title" data-decode>List New Cyber Item</h2>
+            <p class="auth-subtitle">Deployment Protocol: Marketplace Inventory Injection</p>
+            
+            {% if error %}
+                <div class="cyber-alert-box alert-critical">
+                    <span class="alert-title">[DEPLOYMENT ERROR]</span>
+                    <p class="alert-desc">{{ error }}</p>
+                </div>
+            {% endif %}
 
-            <div class="form-group">
-                <label for="category">Sector (Category)</label>
-                <select id="category" name="category" class="form-control" style="background: rgba(0,0,0,0.4); color: #fff; border: 1px solid var(--glass-border); padding: 10px; border-radius: 6px; width: 100%;" required>
-                    <option value="" disabled selected>Select a sector...</option>
-                    {% for cat in categories %}
-                        <option value="{{ cat.id }}">{{ cat.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <form method="POST" action="{% url 'create_product' %}" enctype="multipart/form-data" class="cyber-form-matrix">
+                {% csrf_token %}
+                
+                <div class="form-group-cyber">
+                    <label for="title" class="cyber-label">Product Title</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="title" name="title" class="cyber-input" placeholder="e.g., Quantum Processor v9" required>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="price">Price (USD)</label>
-                <input type="number" id="price" name="price" step="0.01" min="0.1" class="form-control" placeholder="0.00" required>
-            </div>
-            <div class="form-group">
-                <label for="quantity">Available Quantity</label>
-                <input type="number" id="quantity" name="quantity" min="1" value="1" class="form-control" required>
-            </div>
+                <div class="form-row-grid">
+                    <div class="form-group-cyber">
+                        <label for="category" class="cyber-label">Sector (Category)</label>
+                        <div class="input-glow-wrapper">
+                            <select id="category" name="category" class="cyber-select" required>
+                                <option value="" disabled selected>Select sector...</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <label for="image">Product Image Interface</label>
-                <input type="file" id="image" name="image" class="form-control" accept="image/*" style="padding: 8px;">
-            </div>
+                    <div class="form-group-cyber">
+                        <label for="price" class="cyber-label">Price (USD)</label>
+                        <div class="input-glow-wrapper">
+                            <input type="number" id="price" name="price" step="0.01" min="0.1" class="cyber-input" placeholder="0.00" required>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="description">Technical Specifications</label>
-                <textarea id="description" name="description" class="form-control" placeholder="Describe the item architecture..." rows="4" style="resize: none;" required></textarea>
-            </div>
+                <div class="form-row-grid">
+                    <div class="form-group-cyber">
+                        <label for="quantity" class="cyber-label">Available Quantity</label>
+                        <div class="input-glow-wrapper">
+                            <input type="number" id="quantity" name="quantity" min="1" value="1" class="cyber-input" required>
+                        </div>
+                    </div>
 
-            <button type="submit" class="cyber-btn">Inject to Marketplace</button>
-        </form>
+                    <div class="form-group-cyber">
+                        <label class="cyber-label">Product Image Interface</label>
+                        <label for="image" class="custom-file-upload">
+                            <span id="file-upload-text">Upload Neural Spec Image</span>
+                            <input type="file" id="image" name="image" class="hidden-file-input" accept="image/*">
+                        </label>
+                    </div>
+                </div>
 
-        <div class="auth-footer">
-            <a href="{% url 'shop_home' %}">Cancel & Return</a>
+                <div id="image-preview-zone" class="hidden-preview">
+                    <img id="image-preview-target" src="" alt="Matrix Preview">
+                    <div class="preview-overlay-scan"></div>
+                </div>
+
+                <div class="form-group-cyber">
+                    <label for="description" class="cyber-label">Technical Specifications</label>
+                    <div class="input-glow-wrapper">
+                        <textarea id="description" name="description" class="cyber-textarea" placeholder="Describe the item architecture, frequency, and core counts..." rows="4" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions-matrix">
+                    <button type="submit" class="cyber-btn btn-matrix-glow large-btn">
+                        <span class="btn-text">Inject to Marketplace</span>
+                        <div class="btn-scanlines"></div>
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <a href="{% url 'shop_home' %}" class="cancel-link">Cancel & Abort Protocol</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
+    <script src="{% static 'js/add_product.js' %}"></script>
 </body>
 </html>

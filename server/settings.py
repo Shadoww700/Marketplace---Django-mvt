@@ -3,10 +3,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env')
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-nd!x3n_9ki4qils@sfq93vw+z-ql$6wd!z$o&h++44m&7d)4l4')
-AI_API_KEY = os.getenv('AI_API_KEY')
+dotenv_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path=dotenv_path)
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+if not SECRET_KEY:
+    SECRET_KEY = 'django-insecure-local-development-key-for-exam-core'
 
 DEBUG = True
 

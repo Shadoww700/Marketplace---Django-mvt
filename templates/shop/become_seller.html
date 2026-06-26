@@ -6,37 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO•CORE - Merchant Application</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
-<body>
+<body class="neo-core-ambient">
 
-    <div class="auth-container">
-        <h2 class="auth-title">Merchant Request</h2>
-        
-        <p style="text-align: center; color: #94a3b8; margin-bottom: 25px; font-size: 14px;">
-            Apply for SELLER status to start listing your cybernetic items in the market grid.
-        </p>
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
 
-        {% if error %}
-            <div class="error-box">
-                {{ error }}
-            </div>
-        {% endif %}
-
-        <form method="POST" action="{% url 'become_seller' %}">
-            {% csrf_token %}
+    <div class="wrapper flex-center-container">
+        <div class="auth-container glass-panel merchant-shell">
+            <div class="profile-glitch-line"></div>
             
-            <div class="form-group">
-                <label for="message">Application Message</label>
-                <textarea id="message" name="message" class="form-control" placeholder="Tell the administrator about your store or products..." rows="5" style="resize: none; font-family: inherit;" required></textarea>
-            </div>
+            <h2 class="auth-title" data-decode>Merchant Request</h2>
+            <p class="merchant-protocol-subtitle">Protocol: Upgrade Access to [SELLER] Status</p>
+            
+            <p class="merchant-description-text">
+                Apply for SELLER status to start injecting and selling your cybernetic items directly into the market grid. Your request will be routed to the system administrator.
+            </p>
 
-            <button type="submit" class="cyber-btn">Submit Application</button>
-        </form>
+            {% if error %}
+                <div class="cyber-alert-box alert-critical">
+                    <span class="alert-title">[VALIDATION ABORTED]</span>
+                    <p class="alert-desc">{{ error }}</p>
+                </div>
+            {% endif %}
 
-        <div class="auth-footer">
-            Changed your mind? <a href="{% url 'shop_home' %}">Return to Market</a>
+            <form method="POST" action="{% url 'become_seller' %}" class="cyber-form-matrix">
+                {% csrf_token %}
+                
+                <div class="form-group-cyber">
+                    <label for="message" class="cyber-label">Application Message / Store Manifest</label>
+                    <div class="input-glow-wrapper">
+                        <textarea id="message" name="message" class="cyber-textarea" placeholder="Identify your store architecture, supply sources, or types of products you plan to list..." rows="5" required></textarea>
+                    </div>
+                </div>
+
+                <div class="security-scan-status">
+                    <div class="scan-bar">
+                        <div id="scan-progress-fill" class="scan-fill"></div>
+                    </div>
+                    <div class="scan-meta">
+                        <span class="scan-label">Data Density:</span>
+                        <span id="scan-percentage" class="scan-value">0%</span>
+                    </div>
+                </div>
+
+                <div class="form-actions-matrix">
+                    <button type="submit" class="cyber-btn btn-matrix-glow large-btn">
+                        <span class="btn-text">Transmit Request Core</span>
+                        <div class="btn-scanlines"></div>
+                    </button>
+                    
+                    <div class="auth-footer">
+                        Changed your mind? <a href="{% url 'shop_home' %}" class="cancel-link">Return to Market</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
+    <script src="{% static 'js/merchant.js' %}"></script>
 </body>
 </html>

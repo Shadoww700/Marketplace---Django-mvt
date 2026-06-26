@@ -4,91 +4,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO•CORE - Marketplace</title>
+    <title>NEO•CORE — Quantum Marketplace</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
     <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="neo-core-ambient">
+
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+        <div class="blob blob-emerald"></div>
+    </div>
+    <div class="cyber-grid-overlay"></div>
 
     <div class="wrapper">
-        <header class="main-header">
-            <div class="logo">NEO•CORE</div>
+        <header class="main-header glass-panel">
+            <div class="logo-zone">
+                <span class="logo-glitch" data-text="NEO•CORE">NEO•CORE</span>
+                <span class="system-status-indicator"><span class="pulse-dot"></span>SYS_ACTIVE</span>
+            </div>
             
             <div class="user-block">
                 {% if user.is_authenticated %}
-                    <span class="entity-info">
-                        Entity: <a href="{% url 'profile_dashboard' %}" class="entity-name" style="text-decoration: underline; color: #fff; font-weight: bold;">{{ user.username }}</a> 
-                        (<span style="color: var(--neon-purple); font-size: 12px;">{{ user.profile.role }}</span>)
-                        | Balance: <strong class="entity-balance">${{ user.profile.balance }}</strong>
-                    </span>
+                    <div class="entity-badge glass-panel-subtle">
+                        <span class="entity-label">OPERATOR:</span>
+                        <a href="{% url 'profile_dashboard' %}" class="entity-name">{{ user.username }}</a>
+                        
+                        <!-- БЕЗОПАСНАЯ ПРОВЕРКА ПРОФИЛЯ ДЛЯ ИСКЛЮЧЕНИЯ RELATED OBJECT ERROR -->
+                        {% if user.profile %}
+                            <span class="role-tag tag-{{ user.profile.role|lower }}">{{ user.profile.role }}</span>
+                            <div class="balance-divider"></div>
+                            <span class="balance-display">CREDITS: <strong class="neon-emerald">${{ user.profile.balance }}</strong></span>
+                        {% else %}
+                            <span class="role-tag tag-customer">UNBOUND</span>
+                            <div class="balance-divider"></div>
+                            <span class="balance-display">CREDITS: <strong class="neon-emerald">$0</strong></span>
+                        {% endif %}
+                    </div>
 
-                    {% if user.profile.role == 'SELLER' %}
-                        <a href="{% url 'create_product' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #064e3b, #059669); border-color: #10b981;">Add Product</a>
-                    {% endif %}
+                    <div class="action-controls">
+                        <!-- Безопасное отображение кнопок управления на основе роли -->
+                        {% if user.profile and user.profile.role == 'SELLER' %}
+                            <a href="{% url 'create_product' %}" class="cyber-btn btn-emerald">
+                                <span class="btn-scanlines"></span>
+                                <span class="btn-text">INITIALIZE PRODUCT</span>
+                            </a>
+                        {% endif %}
 
-                    {% if user.is_staff %}
-                        <a href="{% url 'admin_requests' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #7c2d12, #ea580c); border-color: #f97316;">Admin Panel</a>
-                    {% endif %}
+                        {% if user.is_staff %}
+                            <a href="{% url 'admin_requests' %}" class="cyber-btn btn-orange">
+                                <span class="btn-scanlines"></span>
+                                <span class="btn-text">ADMIN CONTROL</span>
+                            </a>
+                        {% endif %}
 
-                    {% if user.profile.role == 'CUSTOMER' and not user.is_staff %}
-                        <a href="{% url 'become_seller' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px; background: linear-gradient(45deg, #1e1b4b, #4f46e5); box-shadow: none; border: 1px solid var(--glass-border);">Become a Seller</a>
-                    {% endif %}
+                        {% if user.profile and user.profile.role == 'CUSTOMER' and not user.is_staff %}
+                            <a href="{% url 'become_seller' %}" class="cyber-btn btn-indigo">
+                                <span class="btn-scanlines"></span>
+                                <span class="btn-text">UPGRADE TO SELLER</span>
+                            </a>
+                        {% endif %}
 
-                    <a href="{% url 'logout' %}" class="logout-btn">Disconnect</a>
+                        <a href="{% url 'logout' %}" class="logout-action-btn">DISCONNECT</a>
+                    </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="cyber-btn">Sign In</a>
+                    <a href="{% url 'login' %}" class="cyber-btn btn-neon-cyan">
+                        <span class="btn-scanlines"></span>
+                        <span class="btn-text">AUTHORIZE ENTITY</span>
+                    </a>
                 {% endif %}
             </div>
         </header>
 
-        <div class="category-bar">
-            <div class="category-chip active" data-category="all">All Sectors</div>
+        <nav class="category-navigation glass-panel-subtle" aria-label="Sector Navigation">
+            <div class="category-chip active" data-category="all">
+                <span class="chip-status"></span>ALL_SECTORS
+            </div>
             {% for category in categories %}
-                <div class="category-chip" data-category="{{ category.id }}">{{ category.name }}</div>
+                <div class="category-chip" data-category="{{ category.id }}">
+                    <span class="chip-status"></span>{{ category.name|upper }}
+                </div>
             {% endfor %}
-        </div>
+        </nav>
 
+        <section class="ai-terminal-shell glass-panel" id="ai-core-section">
+            <div class="ai-terminal-header">
+                <div class="ai-title-group">
+                    <div class="ai-icon-pulse">
+                        <div class="pulse-ring"></div>
+                        <span class="inner-dot"></span>
+                    </div>
+                    <div>
+                        <h3 class="ai-main-title">AI FINANCIAL INTELLIGENCE MATRIX</h3>
+                        <p class="ai-subtitle">Quantum Llama-3.1-8b-Instant Infrastructure Engine</p>
+                    </div>
+                </div>
+                <div class="ai-node-status">
+                    <span class="terminal-badge">NODE_STATUS: ONLINE</span>
+                    <span class="terminal-badge">SECURE_SSL: TRUE</span>
+                </div>
+            </div>
+            
+            <form method="GET" action="{% url 'shop_home' %}#ai-core-section" class="ai-terminal-form">
+                <div class="ai-input-wrapper">
+                    <span class="terminal-prompt-symbol">&gt;_</span>
+                    <input type="text" name="ai_query" value="{{ ai_query|default:'' }}" placeholder="Ask your AI financial intelligence core..." autocomplete="off" required>
+                </div>
+                <button type="submit" class="cyber-btn btn-matrix-glow">
+                    <span class="btn-scanlines"></span>
+                    <span class="btn-text">QUERY CORE</span>
+                </button>
+            </form>
+
+            {% if ai_response %}
+                <div class="ai-response-viewport">
+                    <div class="viewport-header">
+                        <span class="v-dot"></span><span class="v-dot"></span><span class="v-dot"></span>
+                        <span class="viewport-title">DECRYPTED_RESPONSE_LOG</span>
+                    </div>
+                    <!-- Блок печатной машинки -->
+                    <div class="ai-typing-target" data-raw-text="{{ ai_response }}"></div>
+                </div>
+            {% endif %}
+        </section>
+        
         <main class="showcase">
-            <h2 class="showcase-title">Marketplace Core Lined Up</h2>
-            <p class="showcase-subtitle">Novelty Algorithm: Active (order_by('-created_at'))</p>
+            <div class="showcase-header">
+                <div>
+                    <h2 class="showcase-title">MARKETPLACE INDEX</h2>
+                    <p class="showcase-subtitle">NOVELTY SORTING ALGORITHM: <span class="neon-purple">ACTIVE [order_by('-created_at')]</span></p>
+                </div>
+                <div class="matrix-counter">TOTAL_ITEMS_RENDERED: {{ products.count }}</div>
+            </div>
 
             {% if purchase_error %}
-                <div class="error-box" style="margin-bottom: 25px;">
-                    {{ purchase_error }}
+                <div class="cyber-alert-box alert-critical">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-body">
+                        <span class="alert-title">TRANSACTION_REJECTED</span>
+                        <p class="alert-desc">{{ purchase_error }}</p>
+                    </div>
                 </div>
             {% endif %}
 
             <div class="products-grid">
                 {% for product in products %}
-                    <article class="product-card">
+                    <article class="product-card glass-panel" data-product-sector="{{ product.category.id }}">
                         <div class="product-image-wrapper">
                             {% if product.image %}
                                 <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
                             {% else %}
-                                <div class="product-image" style="background: #1e293b; display: flex; align-items: center; justify-content: center; height: 100%; color: #475569;">No Image</div>
+                                <div class="product-image-placeholder">
+                                    <span class="placeholder-icon">🖲️</span>
+                                    <span class="placeholder-text">NO_VISUAL_DATA</span>
+                                </div>
                             {% endif %}
-                            <span class="product-badge">New Entry</span>
+                            <span class="product-badge glass-panel-subtle">NEW_ENTRY</span>
+                            <div class="card-scanlines"></div>
                         </div>
                         
                         <div class="product-info">
-                            <span class="product-category">{{ product.category.name }}</span>
-                            <span style="color: #64748b; font-size: 11px; float: right;">Stock: {{ product.quantity }} u.</span>
+                            <div class="info-top-meta">
+                                <span class="product-category-tag"><span class="tag-dot"></span>{{ product.category.name|upper }}</span>
+                                <span class="product-stock-tag">STOCK: <strong>{{ product.quantity }} units</strong></span>
+                            </div>
+                            
                             <h3 class="product-title">{{ product.title }}</h3>
                             <p class="product-description">{{ product.description|truncatewords:15 }}</p>
                             
-                            <div class="product-footer">
-                                <span class="product-price">${{ product.price }}</span>
-                                
-                                <form method="POST" action="{% url 'buy_product' product.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="buy-btn">Purchase</button>
-                                </form>
+                            <div class="product-footer-matrix">
+                                <div class="price-container-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 5px;">
+                                    <div class="price-container">
+                                        <span class="price-label">VALUATION</span>
+                                        <span class="product-price">${{ product.price }}</span>
+                                    </div>
+                                    
+                                    <form method="POST" action="{% url 'buy_product' product.id %}" class="purchase-form" style="margin: 0;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="cyber-btn btn-purchase">
+                                            <span class="btn-scanlines"></span>
+                                            <span class="btn-text">PURCHASE</span>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- КНОПКА УДАЛЕНИЯ -->
+                                {% if product.user == request.user %}
+                                    <div class="owner-control-zone">
+                                        <a href="{% url 'delete_product' product.id %}" class="admin-action-btn btn-reject-core">
+                                            [☠️] DESTROY COMMERCIAL ASSET
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </article>
                 {% empty %}
-                    <div class="empty-matrix">
-                        [ Matrix is empty. No cybernetic goods detected in the database yet. ]
+                    <div class="empty-matrix-fallback glass-panel">
+                        <div class="fallback-icon">📡</div>
+                        <p class="fallback-text">[ Matrix sector is depleted. No commercial assets detected in the local database. ]</p>
                     </div>
                 {% endfor %}
             </div>

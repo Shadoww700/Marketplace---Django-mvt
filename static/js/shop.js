@@ -1,30 +1,52 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('⚡ NEO•CORE Matrix Engine initialized.');
+/**
+ * NEO•CORE — QUANTUM MARKETPLACE SCRIPT ENGINE
+ * UI Control: Real-time Sector Filtering & AI Terminal Decryption
+ */
 
-    // Интерактивный интерактив для чипсов категорий
-    const chips = document.querySelectorAll('.category-chip');
-    chips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            
-            // Здесь в будущем можно сделать AJAX фильтрацию товаров без перезагрузки страницы
-            const categoryId = chip.dataset.category;
-            console.log(`Filtering matrix items by category ID: ${categoryId}`);
-        });
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("📡 [SYSTEM] Quantum Marketplace UI core operational.");
 
-    // Эффект динамической подсветки карточек при движении мыши (3D Глоу эффект)
-    const cards = document.querySelectorAll('.product-card');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Задаем CSS переменные координат мыши внутри карточки
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
+    // 1. ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ДЛЯ ТЕРМИНАЛА AI
+    const typingContainer = document.querySelector(".ai-typing-target");
+    
+    if (typingContainer) {
+        const rawText = typingContainer.getAttribute("data-raw-text") || "";
+        let currentIndex = 0;
+        typingContainer.innerText = ""; // Очищаем контейнер перед симуляцией
+
+        function typeCharacter() {
+            if (currentIndex < rawText.length) {
+                typingContainer.innerText += rawText.charAt(currentIndex);
+                currentIndex++;
+                // Случайный интервал задержки для имитации живого терминала
+                setTimeout(typeCharacter, Math.random() * 15 + 10);
+            }
+        }
+        
+        // Запуск протокола вывода через 400мс после загрузки зоны
+        setTimeout(typeCharacter, 400);
+    }
+
+    // 2. ИНТЕРАКТИВНАЯ ФИЛЬТРАЦИЯ СЕКТОРОВ (КАТЕГОРИЙ) БЕЗ ПЕРЕЗАГРУЗКИ
+    const categoryChips = document.querySelectorAll(".category-chip");
+    const productCards = document.querySelectorAll(".product-card");
+
+    categoryChips.forEach(chip => {
+        chip.addEventListener("click", () => {
+            // Переключаем активный чип
+            categoryChips.forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+
+            const selectedSector = chip.getAttribute("data-category");
+
+            productCards.forEach(card => {
+                const cardSector = card.getAttribute("data-product-sector");
+                if (selectedSector === "all" || cardSector === selectedSector) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
         });
     });
 });

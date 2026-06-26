@@ -8,63 +8,109 @@
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
     <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
-<body>
+<body class="neo-core-ambient">
+
+    <!-- Декоративные фоновые слои, прописанные в основном CSS маркетплейса -->
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
 
     <div class="wrapper">
-        <header class="main-header">
-            <div class="logo">User Core Interface</div>
+        <header class="main-header glass-panel">
+            <div class="logo-zone">
+                <div class="pulse-dot"></div>
+                <div class="logo-glitch" data-decode>User Core Interface</div>
+            </div>
             <div class="user-block">
-                <a href="{% url 'shop_home' %}" class="cyber-btn" style="padding: 6px 12px; margin: 0; font-size: 12px;">Back to Market</a>
+                <a href="{% url 'shop_home' %}" class="cyber-btn btn-matrix-glow">
+                    <span class="btn-text">Back to Market</span>
+                    <div class="btn-scanlines"></div>
+                </a>
             </div>
         </header>
 
-        <main class="showcase" style="text-align: left;">
-            <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); padding: 25px; border-radius: 12px; margin-bottom: 30px;">
-                <h2 style="margin: 0 0 10px 0; color: #fff;">Entity: {{ user.username }}</h2>
-                <p style="margin: 5px 0; color: #94a3b8;">Security Access Role: <strong style="color: var(--neon-purple);">{{ profile.role }}</strong></p>
-                <p style="margin: 5px 0; color: #94a3b8;">Financial Core Balance: <strong style="color: #00ff66;">${{ profile.balance }}</strong></p>
+        <main class="showcase">
+            <!-- КАРТОЧКА ПРОФИЛЯ ЭНТИТИ -->
+            <div class="profile-card glass-panel">
+                <div class="profile-glitch-line"></div>
+                <h2 class="profile-title">Entity: {{ user.username }}</h2>
+                <div class="profile-meta-grid">
+                    <p class="profile-meta-item">Security Access Role: <strong class="neon-text-purple">{{ profile.role }}</strong></p>
+                    <p class="profile-meta-item">Financial Core Balance: <strong class="neon-text-emerald">${{ profile.balance }}</strong></p>
+                </div>
             </div>
 
-            <h3 class="showcase-title" style="font-size: 20px; margin-bottom: 15px;">Your Purchase History</h3>
-            <div style="margin-bottom: 40px;">
+            <!-- ИСТОРИЯ ПОКУПОК -->
+            <h3 class="dashboard-section-title" data-decode>🔒 Мои покупки (Purchase History)</h3>
+            <div class="log-container">
                 {% for order in purchases %}
-                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong style="color: #fff;">{{ order.product.title }}</strong>
-                            <span style="color: #475569; margin-left: 10px;">ID: #{{ order.id }}</span>
+                    <div class="dashboard-log-row buy-row">
+                        <div class="log-info">
+                            <strong class="log-item-title">{{ order.product.title }}</strong>
+                            <span class="log-item-id">ID: #{{ order.id }}</span>
                         </div>
-                        <div>
-                            <span style="color: #00ff66; font-weight: bold; margin-right: 15px;">${{ order.total_price }}</span>
-                            <span style="color: #94a3b8; font-size: 12px;">{{ order.created_at|date:"Y-m-d H:i" }}</span>
+                        <div class="log-metrics">
+                            <span class="log-price price-buy">${{ order.total_price }}</span>
+                            <span class="log-timestamp">{{ order.created_at|date:"Y-m-d H:i" }}</span>
                         </div>
                     </div>
                 {% empty %}
-                    <p style="color: #475569;">[ No purchase operations detected in your log. ]</p>
+                    <p class="empty-log-fallback">[ Логи покупок пусты. Вы еще ничего не приобрели в системе. ]</p>
                 {% endfor %}
             </div>
 
             {% if profile.role == 'SELLER' %}
-                <h3 class="showcase-title" style="font-size: 20px; margin-bottom: 15px;">Your Sales Logs</h3>
-                <div>
-                    {% for sale in sales %}
-                        <div style="background: rgba(6, 78, 59, 0.1); border: 1px solid #064e3b; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <strong style="color: #fff;">{{ sale.product.title }}</strong>
-                                <!-- ИСПРАВЛЕНО ТУТ: Заменили sale.user на sale.customer 👇 -->
-                                <span style="color: #94a3b8; margin-left: 10px;">Bought by: <strong>{{ sale.customer.username }}</strong></span>
+                <!-- АКТИВНЫЕ ТОВАРЫ ПРОДАВЦА -->
+                <h3 class="dashboard-section-title" data-decode>📦 Мои товары (Active Inventory)</h3>
+                <div class="log-container">
+                    {% for prod in products %}
+                        <div class="dashboard-log-row inventory-row" style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                            <div class="log-info">
+                                <strong class="neon-text-purple font-mono">[{{ prod.category.name }}]</strong> 
+                                <strong class="log-item-title font-sans">{{ prod.title }}</strong>
                             </div>
-                            <div>
-                                <span style="color: #00ff66; font-weight: bold; margin-right: 15px;">+${{ sale.total_price }}</span>
-                                <span style="color: #94a3b8; font-size: 12px;">{{ sale.created_at|date:"Y-m-d H:i" }}</span>
+                            
+                            <!-- ПРАВАЯ ЧАСТЬ С МЕТРИКАМИ И КНОПКОЙ УДАЛЕНИЯ -->
+                            <div class="log-metrics" style="display: flex; align-items: center; gap: 20px;">
+                                <span class="log-price price-inventory">Price: ${{ prod.price }}</span>
+                                <span class="log-stock">Stock: {{ prod.quantity }} units</span>
+                                
+                                <!-- ФУНКЦИЯ УДАЛЕНИЯ ТОВАРА ПО ЕГО ID -->
+                                <a href="{% url 'delete_product' prod.id %}" class="admin-action-btn btn-reject-core" style="text-decoration: none; padding: 6px 12px; font-size: 10px; font-family: monospace; letter-spacing: 0.5px; border-radius: 4px;">
+                                    [☠️] PURGE
+                                </a>
                             </div>
                         </div>
                     {% empty %}
-                        <p style="color: #475569;">[ No entity has purchased your merchandise yet. ]</p>
+                        <p class="empty-log-fallback">[ У вас нет активных товаров на витрине маркетплейса. ]</p>
+                    {% endfor %}
+                </div>
+
+                <!-- ИСТОРИЯ ПРОДАЖ -->
+                <h3 class="dashboard-section-title" data-decode>📈 Мои продажи (Sales Logs)</h3>
+                <div class="log-container">
+                    {% for sale in sales %}
+                        <div class="dashboard-log-row sale-row">
+                            <div class="log-info">
+                                <strong class="log-item-title">{{ sale.product.title }}</strong>
+                                <span class="log-buyer">Bought by: <strong>{{ sale.customer.username }}</strong></span>
+                            </div>
+                            <div class="log-metrics">
+                                <span class="log-price price-sale">+${{ sale.total_price }}</span>
+                                <span class="log-timestamp">{{ sale.created_at|date:"Y-m-d H:i" }}</span>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="empty-log-fallback">[ Ни один пользователь еще не приобрел ваши товары. ]</p>
                     {% endfor %}
                 </div>
             {% endif %}
         </main>
     </div>
 
+    <!-- Подключаем наш продвинутый JS -->
+    <script src="{% static 'js/dashboard.js' %}"></script>
 </body>
 </html>

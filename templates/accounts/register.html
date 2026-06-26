@@ -4,52 +4,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO•CORE - Sign Up</title>
+    <title>NEO•CORE - Access Registry</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
-<body>
+<body class="neo-core-ambient">
 
-    <div class="auth-container">
-        <h2 class="auth-title">Registration</h2>
-
-        <!-- Выводим ошибку, если она передана из views.py -->
-        {% if error %}
-            <div class="error-box">
-                {{ error }}
-            </div>
-        {% endif %}
-
-        <!-- Кастомная HTML-форма без использования django.forms -->
-        <form method="POST" action="{% url 'register' %}">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" value="{{ data.username }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" value="{{ data.email }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Create password" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password_confirm">Confirm Password</label>
-                <input type="password" id="password_confirm" name="password_confirm" class="form-control" placeholder="Repeat password" required>
-            </div>
-
-            <button type="submit" class="cyber-btn">Initialize Account</button>
-        </form>
-
-        <div class="auth-footer">
-            Already have an account? <a href="{% url 'login' %}">Sign In</a>
-        </div>
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
     </div>
 
+    <div class="wrapper flex-center-container">
+        
+        <!-- ЭКРАН 1: ТЕРМИНАЛ И ЛОГИ (АКТИВЕН ПО УМОЛЧАНИЮ) -->
+        <div class="auth-container glass-panel register-shell active" id="terminal-screen">
+            <div class="profile-glitch-line"></div>
+            <h2 class="auth-title" data-decode>NEO•CORE UPLINK</h2>
+            <p class="verification-protocol-subtitle">Status: Scanning Neural Connection...</p>
+            
+            <div class="terminal-logs-box">
+                <p class="log-line green-log">&gt; Connecting to marketplace data matrix... DONE</p>
+                <p class="log-line green-log">&gt; Checking digital identity tokens... FAIL</p>
+                <p class="log-line red-log">&gt; [WARNING] Unregistered entity detected.</p>
+                <p class="log-line blink-log">&gt; Action required: Deploy account registry module.</p>
+            </div>
+
+            <div class="form-actions-matrix">
+                <!-- КНОПКА ТЕПЕРЬ НА МЕСТЕ И ВСЕГДА ВИДНА -->
+                <button type="button" class="cyber-btn btn-matrix-glow large-btn" id="activate-register-btn">
+                    <span class="btn-text">Initialize Registry Protocol</span>
+                    <div class="btn-scanlines"></div>
+                </button>
+                <div class="auth-footer">
+                    Already have a cleared identity? <a href="{% url 'login' %}" class="cancel-link">Sign In</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 2: ФОРМА РЕГИСТРАЦИИ (ПО УМОЛЧАНИЮ СКРЫТА ЧЕРЕЗ CSS КЛАСС) -->
+        <div class="auth-container glass-panel register-shell" id="form-screen">
+            <div class="profile-glitch-line"></div>
+            
+            <h2 class="auth-title">Create Entity Profile</h2>
+            <p class="verification-protocol-subtitle">Protocol: Database Entry Deployment</p>
+
+            {% if error %}
+                <div class="cyber-alert-box alert-critical">
+                    <span class="alert-title">[REGISTRY ERROR]</span>
+                    <p class="alert-desc">{{ error }}</p>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'register' %}" class="cyber-form-matrix">
+                {% csrf_token %}
+                
+                <div class="form-group-cyber">
+                    <label for="username" class="cyber-label">Username</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="username" name="username" class="cyber-input" placeholder="Enter cyber-alias" value="{{ data.username }}" required>
+                    </div>
+                </div>
+
+                <div class="form-group-cyber">
+                    <label for="email" class="cyber-label">Email Address</label>
+                    <div class="input-glow-wrapper">
+                        <input type="email" id="email" name="email" class="cyber-input" placeholder="identity@matrix.net" value="{{ data.email }}" required>
+                    </div>
+                </div>
+
+                <div class="form-row-grid">
+                    <div class="form-group-cyber">
+                        <label for="password" class="cyber-label">Password</label>
+                        <div class="input-glow-wrapper">
+                            <input type="password" id="password" name="password" class="cyber-input" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group-cyber">
+                        <label for="password_confirm" class="cyber-label">Confirm Password</label>
+                        <div class="input-glow-wrapper">
+                            <input type="password" id="password_confirm" name="password_confirm" class="cyber-input" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions-matrix">
+                    <button type="submit" class="cyber-btn btn-matrix-glow large-btn">
+                        <span class="btn-text">Inject Account to Core</span>
+                        <div class="btn-scanlines"></div>
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <span style="color: var(--text-muted);">Aborting deployment?</span> <a href="#" id="back-to-terminal" class="cancel-link">Back to Log</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/register_flow.js' %}"></script>
 </body>
 </html>

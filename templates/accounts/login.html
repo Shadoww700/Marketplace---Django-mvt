@@ -6,38 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO•CORE - Sign In</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
-<body>
+<body class="neo-core-ambient">
 
-    <div class="auth-container">
-        <h2 class="auth-title">Login</h2>
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
 
-        {% if error %}
-            <div class="error-box">
-                {{ error }}
-            </div>
-        {% endif %}
-
-        <form method="POST" action="{% url 'login' %}">
-            {% csrf_token %}
+    <div class="wrapper flex-center-container">
+        <div class="auth-container glass-panel login-shell active" id="login-screen">
+            <div class="profile-glitch-line"></div>
             
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
-            </div>
+            <h2 class="auth-title" data-decode>Entity Authentication</h2>
+            <p class="verification-protocol-subtitle">Protocol: Terminal Gateway Access</p>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
-            </div>
+            {% if error %}
+                <div class="cyber-alert-box alert-critical">
+                    <span class="alert-title">[AUTH CRITICAL ERROR]</span>
+                    <p class="alert-desc">{{ error }}</p>
+                </div>
+            {% endif %}
 
-            <button type="submit" class="cyber-btn">Access Matrix</button>
-        </form>
+            <form method="POST" action="{% url 'login' %}" class="cyber-form-matrix">
+                {% csrf_token %}
+                
+                <div class="form-group-cyber">
+                    <label for="username" class="cyber-label">Username / Identity Code</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="username" name="username" class="cyber-input" placeholder="Enter your registered alias" required>
+                    </div>
+                </div>
 
-        <div class="auth-footer">
-            New entity? <a href="{% url 'register' %}">Create Account</a>
+                <div class="form-group-cyber">
+                    <label for="password" class="cyber-label">Security Password</label>
+                    <div class="input-glow-wrapper">
+                        <input type="password" id="password" name="password" class="cyber-input" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="crypto-status-zone">
+                    <div class="crypto-dot"></div>
+                    <span id="crypto-text" class="crypto-label-text">Uplink Status: Encrypted Pipeline Standby</span>
+                </div>
+
+                <div class="form-actions-matrix">
+                    <button type="submit" class="cyber-btn btn-matrix-glow large-btn">
+                        <span class="btn-text">Access Matrix Core</span>
+                        <div class="btn-scanlines"></div>
+                    </button>
+                    
+                    <div class="auth-footer">
+                        New entity in the network? <a href="{% url 'register' %}" class="cancel-link">Create Account Space</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
+    <script src="{% static 'js/login_flow.js' %}"></script>
 </body>
 </html>

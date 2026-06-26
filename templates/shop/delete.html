@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO•CORE - Data Purge Confirmation</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body class="neo-core-ambient">
+
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
+
+    <div class="wrapper flex-center-container">
+        <div class="auth-container glass-panel delete-shell active">
+            <div class="profile-glitch-line critical-glitch-line"></div>
+            
+            <h2 class="auth-title neon-text-red" data-decode>CRITICAL: DATA PURGE</h2>
+            <p class="verification-protocol-subtitle red-subtitle">Protocol: Permanently Erase Asset</p>
+
+            <div class="delete-warning-box">
+                <span class="warning-alert-icon">[⚠ WARNING]</span>
+                <p class="warning-text">
+                    You are about to wipe the following item sequence from the marketplace matrix:
+                </p>
+                <div class="target-item-info">
+                    <span class="item-id-label">ASSET_ID:</span> 
+                    <strong class="item-name-highlight">{{ product.id }} // {{ product.title }}</strong>
+                </div>
+                <p class="warning-subtext">This action is irreversible. All associated datablocks will be destroyed.</p>
+            </div>
+
+            <form method="POST" action="" class="cyber-form-matrix">
+                {% csrf_token %}
+                
+                <div class="form-actions-matrix delete-actions-gap">
+                    <button type="submit" class="cyber-btn btn-reject-core large-btn full-width-btn">
+                        <span class="btn-text">Confirm Purge (Delete)</span>
+                    </button>
+                    
+                    <a href="{% url 'shop_home' %}" class="cyber-btn btn-matrix-glow-cyan large-btn text-center-btn">
+                        <span class="btn-text">Abort & Keep Asset</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const charset = "0101XYZΩΨ█▓▒░@#$§€";
+            const target = document.querySelector("[data-decode]");
+            if(target) {
+                const orig = target.innerText;
+                let counter = 0;
+                let loop = setInterval(() => {
+                    target.innerText = orig.split("").map((char, index) => {
+                        if (index < counter) return orig[index];
+                        return charset[Math.floor(Math.random() * charset.length)];
+                    }).join("");
+                    if (counter >= orig.length) { clearInterval(loop); target.innerText = orig; }
+                    counter += 1 / 2;
+                }, 20);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -6,38 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO•CORE - Verify Identity</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
-<body>
+<body class="neo-core-ambient">
 
-    <div class="auth-container">
-        <h2 class="auth-title">Verification</h2>
-        
-        <p style="text-align: center; color: #94a3b8; margin-bottom: 25px; font-size: 14px;">
-            Enter the 6-digit security sequence generated in your terminal logs.
-        </p>
+    <!-- Интерактивный бэкграунд -->
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
 
-        {% if error %}
-            <div class="error-box">
-                {{ error }}
-            </div>
-        {% endif %}
-
-        <form method="POST" action="">
-            {% csrf_token %}
+    <div class="wrapper flex-center-container">
+        <div class="auth-container glass-panel verification-shell">
+            <div class="profile-glitch-line"></div>
             
-            <div class="form-group">
-                <label for="code">Security Code</label>
-                <input type="text" id="code" name="code" class="form-control" placeholder="X X X X X X" maxlength="6" style="text-align: center; font-size: 20px; letter-spacing: 5px;" required>
-            </div>
+            <h2 class="auth-title" data-decode>Identity Verification</h2>
+            <p class="verification-protocol-subtitle">Protocol: Decrypt Terminal Security Key</p>
+            
+            <p class="verification-description">
+                Enter the 6-digit security sequence generated in your secure terminal logs to sync your neural interface.
+            </p>
 
-            <button type="submit" class="cyber-btn">Verify & Activate</button>
-        </form>
+            {% if error %}
+                <div class="cyber-alert-box alert-critical">
+                    <span class="alert-title">[ACCESS DENIED]</span>
+                    <p class="alert-desc">{{ error }}</p>
+                </div>
+            {% endif %}
 
-        <div class="auth-footer">
-            Didn't get the code? <a href="{% url 'register' %}">Restart Registry</a>
+            <!-- Основная форма -->
+            <form method="POST" action="" id="verification-form" class="cyber-form-matrix">
+                {% csrf_token %}
+                
+                <div class="form-group-cyber">
+                    <label class="cyber-label center-label">Security Code Sequence</label>
+                    
+                    <!-- Раздельные ячейки для ввода кода -->
+                    <div class="security-code-container">
+                        <input type="text" class="code-cell" maxlength="1" placeholder="•" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" class="code-cell" maxlength="1" placeholder="•" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" class="code-cell" maxlength="1" placeholder="•" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" class="code-cell" maxlength="1" placeholder="•" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" class="code-cell" maxlength="1" placeholder="•" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" class="code-cell" maxlength="1" placeholder="•" pattern="[0-9]" inputmode="numeric" required>
+                    </div>
+
+                    <!-- Скрытый инпут, куда JS склеит финальную строку перед отправкой в Django -->
+                    <input type="hidden" id="code" name="code" required>
+                </div>
+
+                <div class="form-actions-matrix">
+                    <button type="submit" class="cyber-btn btn-matrix-glow large-btn" id="submit-verify-btn">
+                        <span class="btn-text">Verify & Activate Session</span>
+                        <div class="btn-scanlines"></div>
+                    </button>
+                    
+                    <div class="auth-footer">
+                        Didn't get the code? <a href="{% url 'register' %}" class="cancel-link">Restart Registry</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
+    <!-- Подключаем скрипт интерактивного ввода -->
+    <script src="{% static 'js/verify.js' %}"></script>
 </body>
 </html>
-
