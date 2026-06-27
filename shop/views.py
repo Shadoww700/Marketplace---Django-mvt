@@ -6,6 +6,7 @@ import os
 import random
 from groq import Groq
 from dotenv import load_dotenv
+from django.db.models import Q
 
 AI_API_KEY = os.getenv('AI_API_KEY')
 groq_client = Groq(api_key=AI_API_KEY)
@@ -19,6 +20,14 @@ def shop_home(req):
     
     ai_response = None
     ai_query = req.GET.get('ai_query', '').strip()
+
+    category_id = req.GET.get('category')
+    if category_id:
+        products = products.filter(category_id=category_id)
+
+    search_query = req.GET.get('search', '').strip()
+    if search_query:
+        products = products.filter(Q(title__icontains=search_query) | Q(description__icontains=search_query))
 
     if ai_query:
         if req.user.is_authenticated:
@@ -124,7 +133,7 @@ def reject_seller(req, request_id):
     if req.method == 'POST':
         seller_request = get_object_or_404(models.SellerRequest, id=request_id)
 
-        seller_request.status = 'REJECTED'
+        seller_request.status = 'CUSTOMER'
         seller_request.save()
 
     return redirect('admin_requests')
@@ -275,10 +284,10 @@ def profile_dashboard_view(req):
 
 
 
-from .models import Product
+
 @login_required
 def delete_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id, seller=request.user)
+    product = get_object_or_404(models.Product, id=product_id, seller=request.user)
     
     if request.method == 'POST':
         product.delete()

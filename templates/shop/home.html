@@ -80,15 +80,27 @@
             </div>
         </header>
 
+        <form method="GET" action="{% url 'shop_home' %}" class="search-terminal-form">
+            <div class="search-input-box">
+                
+                <input type="text" name="search" value="{{ request.GET.search|default:'' }}" 
+                    placeholder="SEARCH WITH NAME AND DESCRIPTION...  " autocomplete="off">
+            </div>
+            <button type="submit" class="cyber-btn btn-search-execute">
+                <span class="btn-text">EXECUTE</span>
+            </button>
+        </form>
+
         
         <nav class="category-navigation glass-panel-subtle" aria-label="Sector Navigation">
-            <div class="category-chip active" data-category="all">
-                <span class="chip-status"></span>ALL_SECTORS
-            </div>
+            <a href="{% url 'shop_home' %}" class="category-chip {% if not request.GET.cat %}active{% endif %}">
+                <span class="chip-status"></span>ALL SECTORS
+            </a>
             {% for category in categories %}
-                <div class="category-chip" data-category="{{ category.id }}">
+                <a href="?cat={{ category.id }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+                class="category-chip {% if request.GET.cat == category.id|stringformat:'s' %}active{% endif %}">
                     <span class="chip-status"></span>{{ category.name|upper }}
-                </div>
+                </a>
             {% endfor %}
         </nav>
 
@@ -137,7 +149,7 @@
             <div class="showcase-header">
                 <div>
                     <h2 class="showcase-title">MARKETPLACE INDEX</h2>
-                    <p class="showcase-subtitle">NOVELTY SORTING ALGORITHM: <span class="neon-purple">ACTIVE [order_by('-created_at')]</span></p>
+                    
                 </div>
                 <div class="matrix-counter">TOTAL_ITEMS_RENDERED: {{ products.count }}</div>
             </div>

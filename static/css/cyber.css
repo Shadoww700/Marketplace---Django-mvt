@@ -285,3 +285,96 @@ body {
     .profile-meta-grid { flex-direction: column; gap: 10px; }
 }
 
+
+.search-terminal-form {
+    display: flex;
+    gap: 15px; 
+    margin-bottom: 30px;
+    padding: 15px;
+    width: 100%; /* Убедимся, что форма растянута */
+}
+
+/* Поле ввода - 70% */
+.search-input-box {
+    flex: 0 0 70%; /* Жестко 70% */
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 242, 255, 0.3);
+    box-sizing: border-box; /* Чтобы padding не ломал ширину */
+}
+
+/* Кнопка - 30% */
+.btn-search-execute {
+    flex: 0 0 30%; /* Жестко 30% */
+    background: linear-gradient(90deg, #7b4fff, #00f2ff);
+    color: #000;
+    font-weight: 800;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+    transition: 0.3s;
+    box-sizing: border-box; /* Чтобы border не ломал ширину */
+}
+
+/* Настройка шрифта внутри input */
+.search-input-box input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    padding: 10px 0;
+    font-family: 'Orbitron', sans-serif;
+    outline: none;
+}
+
+.entity-badge {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Больше воздуха между элементами */
+    padding: 15px 25px; /* Увеличиваем внутренние отступы */
+    border-radius: 12px;
+    background: rgba(10, 20, 30, 0.6);
+    border: 1px solid rgba(0, 242, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.entity-badge:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 242, 255, 0.8);
+}
+
+.entity-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; /* Увеличили размер */
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+.entity-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px; /* Имя стало заметнее */
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.role-tag {
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.balance-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px; /* Баланс стал больше */
+}
