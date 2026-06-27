@@ -50,3 +50,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const lightbox = document.getElementById('lightbox');
+    const fullImg = document.getElementById('full-img');
+    const images = document.querySelectorAll('.product-image');
+
+    images.forEach(img => {
+        img.addEventListener('click', () => {
+            lightbox.style.display = 'flex';
+            fullImg.src = img.src;
+        });
+    });
+
+    // Закрытие при клике
+    lightbox.addEventListener('click', () => {
+        lightbox.style.display = 'none';
+    });
+});

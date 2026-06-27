@@ -27,21 +27,22 @@
                 <span class="system-status-indicator"><span class="pulse-dot"></span>SYS_ACTIVE</span>
             </div>
             
+            
             <div class="user-block">
                 {% if user.is_authenticated %}
                     <div class="entity-badge glass-panel-subtle">
-                        <span class="entity-label">OPERATOR:</span>
+                        <span class="entity-label">PROFILE:</span>
                         <a href="{% url 'profile_dashboard' %}" class="entity-name">{{ user.username }}</a>
                         
                         <!-- БЕЗОПАСНАЯ ПРОВЕРКА ПРОФИЛЯ ДЛЯ ИСКЛЮЧЕНИЯ RELATED OBJECT ERROR -->
                         {% if user.profile %}
                             <span class="role-tag tag-{{ user.profile.role|lower }}">{{ user.profile.role }}</span>
                             <div class="balance-divider"></div>
-                            <span class="balance-display">CREDITS: <strong class="neon-emerald">${{ user.profile.balance }}</strong></span>
+                            <span class="balance-display">BALANCE: <strong class="neon-emerald">${{ user.profile.balance }}</strong></span>
                         {% else %}
                             <span class="role-tag tag-customer">UNBOUND</span>
                             <div class="balance-divider"></div>
-                            <span class="balance-display">CREDITS: <strong class="neon-emerald">$0</strong></span>
+                            <span class="balance-display">BALANCE: <strong class="neon-emerald">$0</strong></span>
                         {% endif %}
                     </div>
 
@@ -50,7 +51,7 @@
                         {% if user.profile and user.profile.role == 'SELLER' %}
                             <a href="{% url 'create_product' %}" class="cyber-btn btn-emerald">
                                 <span class="btn-scanlines"></span>
-                                <span class="btn-text">INITIALIZE PRODUCT</span>
+                                <span class="btn-text">ADD PRODUCT</span>
                             </a>
                         {% endif %}
 
@@ -68,7 +69,7 @@
                             </a>
                         {% endif %}
 
-                        <a href="{% url 'logout' %}" class="logout-action-btn">DISCONNECT</a>
+                        <a href="{% url 'logout' %}" class="logout-action-btn">LOGOUT</a>
                     </div>
                 {% else %}
                     <a href="{% url 'login' %}" class="cyber-btn btn-neon-cyan">
@@ -79,6 +80,7 @@
             </div>
         </header>
 
+        
         <nav class="category-navigation glass-panel-subtle" aria-label="Sector Navigation">
             <div class="category-chip active" data-category="all">
                 <span class="chip-status"></span>ALL_SECTORS
@@ -211,6 +213,12 @@
             </div>
         </main>
     </div>
+    <!-- Контейнер для полноэкранного просмотра -->
+<div id="lightbox" class="lightbox-overlay">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-content" id="full-img">
+    <div id="caption"></div>
+</div>
 
     <script src="{% static 'js/shop.js' %}"></script>
 </body>
