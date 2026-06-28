@@ -79,7 +79,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-LOGIN_URL = 'login' 
+LOGIN_URL = 'shop_home' 
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [

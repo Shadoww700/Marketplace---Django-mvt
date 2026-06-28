@@ -58,6 +58,7 @@ body.neo-core-ambient {
     gap: 24px;
 }
 
+
 /* Изолированный бэкграунд (Клик сквозь него 100%) */
 .cyber-grid-overlay {
     position: fixed;

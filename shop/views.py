@@ -21,7 +21,7 @@ def shop_home(req):
     ai_response = None
     ai_query = req.GET.get('ai_query', '').strip()
 
-    category_id = req.GET.get('category')
+    category_id = req.GET.get('cat')
     if category_id:
         products = products.filter(category_id=category_id)
 
@@ -79,7 +79,7 @@ def become_seller_view(req):
     existing_request = models.SellerRequest.objects.filter(user=req.user, status='PENDING').exists()
     if existing_request:
         return render(req, 'shop/become_seller.html', {
-            'error': 'You already have a pending application. Please wait for administrator approval.'
+            'error': 'You already have a pending application.\n Please wait for administrator approval.'
         })
 
     if req.method == 'POST':
@@ -111,6 +111,8 @@ def admin_requests_list(req):
     return render(req, 'shop/admin_requests.html', {'requests': requests})
 
 
+
+
 @login_required
 @user_passes_test(is_admin, login_url='shop_home')
 def approve_seller(req, request_id):
@@ -133,7 +135,7 @@ def reject_seller(req, request_id):
     if req.method == 'POST':
         seller_request = get_object_or_404(models.SellerRequest, id=request_id)
 
-        seller_request.status = 'CUSTOMER'
+        seller_request.status = 'REJECTED'
         seller_request.save()
 
     return redirect('admin_requests')

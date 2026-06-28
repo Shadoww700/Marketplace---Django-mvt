@@ -23,7 +23,7 @@
     <div class="wrapper">
         <header class="main-header glass-panel">
             <div class="logo-zone">
-                <span class="logo-glitch" data-text="NEO•CORE">NEO•CORE</span>
+                <span class="logo-glitch" data-text="NEO•CORE">AMANAT • MARKETPLACE</span>
                 <span class="system-status-indicator"><span class="pulse-dot"></span>SYS_ACTIVE</span>
             </div>
             
@@ -31,7 +31,7 @@
             <div class="user-block">
                 {% if user.is_authenticated %}
                     <div class="entity-badge glass-panel-subtle">
-                        <span class="entity-label">PROFILE:</span>
+                        <span class="entity-label"><big>PROFILE:</big></span>
                         <a href="{% url 'profile_dashboard' %}" class="entity-name">{{ user.username }}</a>
                         
                         <!-- БЕЗОПАСНАЯ ПРОВЕРКА ПРОФИЛЯ ДЛЯ ИСКЛЮЧЕНИЯ RELATED OBJECT ERROR -->
