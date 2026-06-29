@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Purchase | NEO•CORE</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body class="neo-core-ambient">
+
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
+
+    <div class="wrapper flex-center-container">
+        <div class="auth-container glass-panel add-product-shell">
+            <div class="profile-glitch-line"></div>
+
+            <h2 class="auth-title" data-decode>Confirm Acquisition</h2>
+            <p class="auth-subtitle">Transaction Protocol: Delivery Data Required</p>
+
+            {% if error %}
+                <div class="cyber-alert-box alert-critical">
+                    <span class="alert-title">[TRANSACTION ERROR]</span>
+                    <p class="alert-desc">{{ error }}</p>
+                </div>
+            {% endif %}
+
+            <!-- Инфо о товаре -->
+            <div class="glass-panel" style="padding: 16px; margin-bottom: 24px; border-left: 2px solid #0ff;">
+                <p class="cyber-label" style="margin-bottom: 6px;">Target Item</p>
+                <strong class="neon-text-purple" style="font-size: 1.1rem;">{{ product.title }}</strong>
+                <div style="display: flex; gap: 24px; margin-top: 10px;">
+                    <span class="log-price price-buy">Price: ${{ product.price }}</span>
+                    <span class="log-stock">Stock: {{ product.quantity }} units</span>
+                    <span class="log-buyer">Seller: <strong class="neon-text-emerald">{{ product.seller.username }}</strong></span>
+                </div>
+            </div>
+
+            <form method="POST" action="{% url 'buy_product' product.id %}" class="cyber-form-matrix">
+                {% csrf_token %}
+
+                <div class="form-group-cyber">
+                    <label for="quantity" class="cyber-label">Quantity</label>
+                    <div class="input-glow-wrapper">
+                        <input type="number" id="quantity" name="quantity" min="1" max="{{ product.quantity }}" value="1" class="cyber-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group-cyber">
+                    <label for="address" class="cyber-label">Delivery Address</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="address" name="address" class="cyber-input" placeholder="e.g., ул. Ленина 12, кв. 5, Душанбе" required>
+                    </div>
+                </div>
+
+                <div class="form-group-cyber">
+                    <label for="phone_number" class="cyber-label">Phone Number</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="phone_number" name="phone_number" class="cyber-input" placeholder="e.g., +992 XX XXX XXXX" required>
+                    </div>
+                </div>
+
+                <div class="form-actions-matrix">
+                    <button type="submit" class="cyber-btn btn-matrix-glow large-btn">
+                        <span class="btn-text">Confirm & Execute Transfer</span>
+                        <div class="btn-scanlines"></div>
+                    </button>
+                    <div class="auth-footer">
+                        <a href="{% url 'shop_home' %}" class="cancel-link">Abort Transaction</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

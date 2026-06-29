@@ -109,4 +109,4 @@ def user_login(req):
 
 def user_logout(req):
     logout(req)
-    return redirect('login')
+    return redirect('shop_home')

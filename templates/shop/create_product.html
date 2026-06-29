@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO•CORE - Add Cyber Product</title>
+    <title>{% if product %}Edit Cyber Item{% else %}List New Cyber Item{% endif %} | NEO•CORE</title>
     <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
     <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 </head>
@@ -20,8 +20,8 @@
         <div class="auth-container glass-panel add-product-shell">
             <div class="profile-glitch-line"></div>
             
-            <h2 class="auth-title" data-decode>List New Cyber Item</h2>
-            <p class="auth-subtitle">Deployment Protocol: Marketplace Inventory Injection</p>
+            <h2 class="auth-title" data-decode>{% if product %}Modify Cyber Item{% else %}List New Cyber Item{% endif %}</h2>
+            <p class="auth-subtitle">Deployment Protocol: {% if product %}Inventory Update{% else %}Marketplace Injection{% endif %}</p>
             
             {% if error %}
                 <div class="cyber-alert-box alert-critical">
@@ -30,24 +30,43 @@
                 </div>
             {% endif %}
 
-            <form method="POST" action="{% url 'create_product' %}" enctype="multipart/form-data" class="cyber-form-matrix">
+            <form method="POST" action="{% if product %}{% url 'edit_product' product.id %}{% else %}{% url 'create_product' %}{% endif %}" enctype="multipart/form-data" class="cyber-form-matrix">
                 {% csrf_token %}
                 
                 <div class="form-group-cyber">
                     <label for="title" class="cyber-label">Product Title</label>
                     <div class="input-glow-wrapper">
-                        <input type="text" id="title" name="title" class="cyber-input" placeholder="e.g., Quantum Processor v9" required>
+                        <input type="text" id="title" name="title" value="{{ product.title|default:'' }}" class="cyber-input" placeholder="e.g., Quantum Processor v9" required>
                     </div>
                 </div>
+
+                {% if product %}
+                <div class="form-group-cyber">
+                    <label class="cyber-label">Existing Neural Images</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        {% for img in product.images.all %}
+                            <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <img src="{{ img.image.url }}" style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #0ff;">
+                                <!-- ✅ Кнопка удаления конкретного фото -->
+                                <a href="{% url 'delete_product_image' img.id %}"
+                                   style="font-size: 10px; font-family: monospace; color: #ff4444; text-decoration: none; letter-spacing: 0.5px;"
+                                   onclick="return confirm('Delete this image?')">
+                                    [✕ PURGE]
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
 
                 <div class="form-row-grid">
                     <div class="form-group-cyber">
                         <label for="category" class="cyber-label">Sector (Category)</label>
                         <div class="input-glow-wrapper">
-                            <select id="category" name="category" class="cyber-select" required>
-                                <option value="" disabled selected>Select sector...</option>
+                            <select id="category" name="category" class="cyber-select" {% if not product %}required{% endif %}>
+                                <option value="" disabled>Select sector...</option>
                                 {% for cat in categories %}
-                                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                    <option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -56,7 +75,7 @@
                     <div class="form-group-cyber">
                         <label for="price" class="cyber-label">Price (USD)</label>
                         <div class="input-glow-wrapper">
-                            <input type="number" id="price" name="price" step="0.01" min="0.1" class="cyber-input" placeholder="0.00" required>
+                            <input type="number" id="price" name="price" value="{{ product.price|default:'' }}" step="0.01" min="0.1" class="cyber-input" placeholder="0.00" required>
                         </div>
                     </div>
                 </div>
@@ -65,39 +84,34 @@
                     <div class="form-group-cyber">
                         <label for="quantity" class="cyber-label">Available Quantity</label>
                         <div class="input-glow-wrapper">
-                            <input type="number" id="quantity" name="quantity" min="1" value="1" class="cyber-input" required>
+                            <input type="number" id="quantity" name="quantity" min="1" value="{{ product.quantity|default:1 }}" class="cyber-input" required>
                         </div>
                     </div>
 
                     <div class="form-group-cyber">
-                        <label class="cyber-label">Product Image Interface</label>
-                        <label for="image" class="custom-file-upload">
-                            <span id="file-upload-text">Upload Neural Spec Image</span>
-                            <input type="file" id="image" name="image" class="hidden-file-input" accept="image/*">
-                        </label>
+                        <!-- ✅ multiple — обязательно для загрузки нескольких фото -->
+                        <label class="cyber-label">Upload Images (Multiple)</label>
+                        <div class="input-glow-wrapper">
+                            <input type="file" name="images" class="cyber-input" multiple accept="image/*" style="padding-top: 10px;">
+                        </div>
                     </div>
-                </div>
-
-                <div id="image-preview-zone" class="hidden-preview">
-                    <img id="image-preview-target" src="" alt="Matrix Preview">
-                    <div class="preview-overlay-scan"></div>
                 </div>
 
                 <div class="form-group-cyber">
                     <label for="description" class="cyber-label">Technical Specifications</label>
                     <div class="input-glow-wrapper">
-                        <textarea id="description" name="description" class="cyber-textarea" placeholder="Describe the item architecture, frequency, and core counts..." rows="4" required></textarea>
+                        <textarea id="description" name="description" class="cyber-textarea" placeholder="Describe the item architecture..." rows="4" required>{{ product.description|default:'' }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-actions-matrix">
                     <button type="submit" class="cyber-btn btn-matrix-glow large-btn">
-                        <span class="btn-text">Inject to Marketplace</span>
+                        <span class="btn-text">{% if product %}Update Inventory{% else %}Inject to Marketplace{% endif %}</span>
                         <div class="btn-scanlines"></div>
                     </button>
                     
                     <div class="auth-footer">
-                        <a href="{% url 'shop_home' %}" class="cancel-link">Cancel & Abort Protocol</a>
+                        <a href="{% url 'profile_dashboard' %}" class="cancel-link">Cancel & Abort Protocol</a>
                     </div>
                 </div>
             </form>

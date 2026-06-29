@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller: {{ seller.username }} | NEO•CORE</title>
+    <link rel="stylesheet" href="{% static 'css/cyber.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body class="neo-core-ambient">
+
+    <div class="cyber-grid-overlay"></div>
+    <div class="ambient-glow-core">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+    </div>
+
+    <div class="wrapper">
+        <header class="main-header glass-panel">
+            <div class="logo-zone">
+                <div class="pulse-dot"></div>
+                <div class="logo-glitch" data-decode>Seller Node Profile</div>
+            </div>
+            <div class="user-block">
+                <a href="{% url 'shop_home' %}" class="cyber-btn btn-matrix-glow">
+                    <span class="btn-text">Back to Market</span>
+                    <div class="btn-scanlines"></div>
+                </a>
+            </div>
+        </header>
+
+        <main class="showcase">
+            <!-- Карточка продавца -->
+            <div class="profile-card glass-panel">
+                <div class="profile-glitch-line"></div>
+                <h2 class="profile-title">Vendor Node: {{ seller.username }}</h2>
+                <div class="profile-meta-grid">
+                    <p class="profile-meta-item">
+                        Active Listings: <strong class="neon-text-purple">{{ product_count }} items</strong>
+                    </p>
+                    <p class="profile-meta-item">
+                        Completed Sales: <strong class="neon-text-emerald">{{ total_sales }} transactions</strong>
+                    </p>
+                    <p class="profile-meta-item">
+                        Member Since: <strong class="neon-text-purple">{{ seller.date_joined|date:"Y-m-d" }}</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Товары продавца -->
+            <h3 class="dashboard-section-title" data-decode>📦 Active Inventory</h3>
+
+            {% if products %}
+                <div class="product-grid">
+                    {% for prod in products %}
+                        <div class="product-card glass-panel">
+                            <div class="product-glitch-line"></div>
+
+                            <!-- Фото -->
+                            {% with prod.images.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.image.url }}" class="product-img" alt="{{ prod.title }}">
+                                {% else %}
+                                    <div class="product-img-placeholder">[NO IMAGE DATA]</div>
+                                {% endif %}
+                            {% endwith %}
+
+                            <div class="product-info">
+                                <p class="product-category">[{{ prod.category.name }}]</p>
+                                <h3 class="product-title">{{ prod.title }}</h3>
+                                <p class="product-desc">{{ prod.description|truncatechars:80 }}</p>
+
+                                <div class="product-footer">
+                                    <span class="product-price">${{ prod.price }}</span>
+                                    <span class="log-stock">{{ prod.quantity }} in stock</span>
+                                </div>
+
+                                {% if user.is_authenticated and user != prod.seller %}
+                                    <a href="{% url 'buy_product' prod.id %}" class="cyber-btn btn-matrix-glow" style="width:100%; margin-top:10px; text-align:center;">
+                                        <span class="btn-text">Acquire</span>
+                                        <div class="btn-scanlines"></div>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="log-container">
+                    <p class="empty-log-fallback">[ Vendor has no active listings in the marketplace. ]</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

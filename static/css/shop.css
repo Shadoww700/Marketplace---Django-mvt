@@ -1320,3 +1320,493 @@ body.neo-core-ambient {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.1); /* Легкий отблеск при наведении */
 }
+
+/* ==========================================================================
+   BUY CONFIRM — форма подтверждения покупки
+   ========================================================================== */
+
+/* Инфо-блок о товаре перед оплатой */
+.buy-product-info-block {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border-left: 2px solid var(--neon-cyan);
+    background: rgba(0, 242, 254, 0.03);
+    border-radius: 0 8px 8px 0;
+}
+
+.buy-product-info-block .buy-info-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.buy-product-info-block .buy-product-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--neon-purple);
+    margin-bottom: 12px;
+}
+
+.buy-meta-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 12px;
+}
+
+.buy-meta-price {
+    color: var(--neon-emerald);
+    font-weight: 700;
+}
+
+.buy-meta-stock {
+    color: var(--text-secondary);
+}
+
+.buy-meta-seller {
+    color: var(--text-secondary);
+}
+
+.buy-meta-seller a {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    transition: text-shadow 0.2s;
+}
+
+.buy-meta-seller a:hover {
+    text-shadow: 0 0 8px var(--neon-cyan);
+}
+
+/* ==========================================================================
+   SELLER PROFILE — публичная страница продавца
+   ========================================================================== */
+
+/* Статы продавца */
+.seller-stats-grid {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.seller-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.seller-stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.seller-stat-value {
+    font-family: var(--font-cyber);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Сетка товаров на странице продавца — адаптирована под seller_profile */
+.seller-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+/* Плейсхолдер если нет фото у товара */
+.product-img-placeholder {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid var(--glass-border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+/* Фото товара внутри карточки на странице продавца */
+.seller-product-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--glass-border);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .seller-product-img {
+    transform: scale(1.03);
+}
+
+/* Инфо внутри карточки */
+.seller-product-info {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.seller-product-category {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--neon-purple);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.seller-product-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.seller-product-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.seller-product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.seller-product-price {
+    font-family: var(--font-cyber);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--neon-emerald);
+}
+
+/* Кнопка "Acquire" на карточке продавца */
+.btn-acquire {
+    font-family: var(--font-cyber);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    color: #fff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn-acquire:hover {
+    background: var(--neon-cyan);
+    border-color: transparent;
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+/* ==========================================================================
+   DASHBOARD — изменения в существующем шаблоне
+   ========================================================================== */
+
+/* Строка покупки теперь column — доп. стили для нижней мета-строки */
+.order-meta-row {
+    display: flex;
+    gap: 20px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+    padding-top: 4px;
+}
+
+.order-meta-vendor a {
+    color: var(--neon-purple);
+    text-decoration: none;
+    transition: text-shadow 0.2s;
+}
+
+.order-meta-vendor a:hover {
+    text-shadow: 0 0 6px var(--neon-purple);
+}
+
+.order-meta-address {
+    color: var(--neon-cyan);
+}
+
+.order-meta-phone {
+    color: var(--neon-cyan);
+}
+
+.order-meta-qty {
+    color: var(--text-muted);
+}
+
+/* Кнопка EDIT рядом с PURGE в инвентаре */
+.btn-edit-core {
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: rgba(0, 242, 254, 0.04);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.btn-edit-core:hover {
+    background: var(--neon-cyan);
+    color: #000;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+}
+
+/* Мета-строка в продажах (адрес/телефон покупателя) */
+.sale-meta-row {
+    display: flex;
+    gap: 20px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    margin-top: 4px;
+}
+
+.sale-meta-address,
+.sale-meta-phone {
+    color: var(--neon-cyan);
+}
+
+.sale-meta-qty {
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   CREATE PRODUCT — кнопка удаления фото при редактировании
+   ========================================================================== */
+
+.existing-image-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.existing-image-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid var(--neon-cyan);
+    border-radius: 4px;
+    transition: border-color 0.2s;
+}
+
+.existing-image-thumb:hover {
+    border-color: #ef4444;
+}
+
+.btn-purge-image {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: #ef4444;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: text-shadow 0.2s;
+}
+
+.btn-purge-image:hover {
+    text-shadow: 0 0 6px #ef4444;
+}
+
+/* ==========================================================================
+   АДАПТИВ для новых блоков
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .buy-meta-row { gap: 12px; }
+    .seller-stats-grid { gap: 20px; }
+    .seller-products-grid { grid-template-columns: 1fr; }
+    .order-meta-row, .sale-meta-row { gap: 10px; }
+}
+
+/* ==========================================================================
+   HOME.HTML — дополнительные стили для карточек товаров
+   Добавить в конец shop.css
+   ========================================================================== */
+
+/* Имя продавца на карточке */
+.product-seller-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.product-seller-link {
+    color: var(--neon-purple);
+    text-decoration: none;
+    transition: text-shadow 0.2s;
+}
+
+.product-seller-link:hover {
+    text-shadow: 0 0 8px var(--neon-purple);
+    color: var(--neon-cyan);
+}
+
+/* Блок кнопок в футере карточки */
+.price-container-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.product-card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Кнопка EDIT на карточке (для продавца) */
+.btn-edit-inline {
+    font-family: var(--font-cyber);
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--neon-cyan);
+    background: rgba(0, 242, 254, 0.05);
+    color: var(--neon-cyan);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-edit-inline:hover {
+    background: var(--neon-cyan);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+}
+
+/* Кнопка PURGE на карточке (для продавца) */
+.btn-delete-inline {
+    font-family: var(--font-cyber);
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+    color: #ef4444;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-delete-inline:hover {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+/* ==========================================================================
+   PRODUCT IMAGE SLIDER — добавить в конец shop.css
+   ========================================================================== */
+
+/* Кнопки стрелок */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    color: var(--neon-cyan);
+    font-size: 24px;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.slider-btn:hover {
+    background: rgba(0, 242, 254, 0.15);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+.slider-btn-prev { left: 8px; }
+.slider-btn-next { right: 8px; }
+
+/* Счётчик "1 / 3" */
+.slider-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.5px;
+}
+
+/* Точки-индикаторы */
+.slider-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 5px;
+}
+
+.slider-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.slider-dot.active {
+    background: var(--neon-cyan);
+    box-shadow: 0 0 6px var(--neon-cyan);
+}

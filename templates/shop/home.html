@@ -27,14 +27,11 @@
                 <span class="system-status-indicator"><span class="pulse-dot"></span>SYS_ACTIVE</span>
             </div>
             
-            
             <div class="user-block">
                 {% if user.is_authenticated %}
                     <div class="entity-badge glass-panel-subtle">
                         <span class="entity-label"><big>PROFILE:</big></span>
                         <a href="{% url 'profile_dashboard' %}" class="entity-name">{{ user.username }}</a>
-                        
-                        <!-- БЕЗОПАСНАЯ ПРОВЕРКА ПРОФИЛЯ ДЛЯ ИСКЛЮЧЕНИЯ RELATED OBJECT ERROR -->
                         {% if user.profile %}
                             <span class="role-tag tag-{{ user.profile.role|lower }}">{{ user.profile.role }}</span>
                             <div class="balance-divider"></div>
@@ -47,7 +44,6 @@
                     </div>
 
                     <div class="action-controls">
-                        <!-- Безопасное отображение кнопок управления на основе роли -->
                         {% if user.profile and user.profile.role == 'SELLER' %}
                             <a href="{% url 'create_product' %}" class="cyber-btn btn-emerald">
                                 <span class="btn-scanlines"></span>
@@ -82,16 +78,14 @@
 
         <form method="GET" action="{% url 'shop_home' %}" class="search-terminal-form">
             <div class="search-input-box">
-                
                 <input type="text" name="search" value="{{ request.GET.search|default:'' }}" 
-                    placeholder="SEARCH WITH NAME AND DESCRIPTION...  " autocomplete="off">
+                    placeholder="SEARCH WITH NAME AND DESCRIPTION..." autocomplete="off">
             </div>
             <button type="submit" class="cyber-btn btn-search-execute">
                 <span class="btn-text">EXECUTE</span>
             </button>
         </form>
 
-        
         <nav class="category-navigation glass-panel-subtle" aria-label="Sector Navigation">
             <a href="{% url 'shop_home' %}" class="category-chip {% if not request.GET.cat %}active{% endif %}">
                 <span class="chip-status"></span>ALL SECTORS
@@ -139,7 +133,6 @@
                         <span class="v-dot"></span><span class="v-dot"></span><span class="v-dot"></span>
                         <span class="viewport-title">DECRYPTED_RESPONSE_LOG</span>
                     </div>
-                    <!-- Блок печатной машинки -->
                     <div class="ai-typing-target" data-raw-text="{{ ai_response }}"></div>
                 </div>
             {% endif %}
@@ -149,7 +142,6 @@
             <div class="showcase-header">
                 <div>
                     <h2 class="showcase-title">MARKETPLACE INDEX</h2>
-                    
                 </div>
                 <div class="matrix-counter">TOTAL_ITEMS_RENDERED: {{ products.count }}</div>
             </div>
@@ -167,15 +159,16 @@
             <div class="products-grid">
                 {% for product in products %}
                     <article class="product-card glass-panel" data-product-sector="{{ product.category.id }}">
+                        
                         <div class="product-image-wrapper">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
-                            {% else %}
+                            {% for img in product.images.all %}
+                                <img src="{{ img.image.url }}" alt="{{ product.title }}" class="product-image">
+                            {% empty %}
                                 <div class="product-image-placeholder">
                                     <span class="placeholder-icon">🖲️</span>
                                     <span class="placeholder-text">NO_VISUAL_DATA</span>
                                 </div>
-                            {% endif %}
+                            {% endfor %}
                             <span class="product-badge glass-panel-subtle">NEW_ENTRY</span>
                             <div class="card-scanlines"></div>
                         </div>
@@ -188,31 +181,41 @@
                             
                             <h3 class="product-title">{{ product.title }}</h3>
                             <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+
+                            <p class="product-seller-tag">
+                                VENDOR: <a href="{% url 'seller_profile' product.seller.id %}" class="product-seller-link">{{ product.seller.username }}</a>
+                            </p>
                             
                             <div class="product-footer-matrix">
-                                <div class="price-container-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 5px;">
+                                <div class="price-container-row">
                                     <div class="price-container">
                                         <span class="price-label">VALUATION</span>
                                         <span class="product-price">${{ product.price }}</span>
                                     </div>
-                                    
-                                    <form method="POST" action="{% url 'buy_product' product.id %}" class="purchase-form" style="margin: 0;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="cyber-btn btn-purchase">
-                                            <span class="btn-scanlines"></span>
-                                            <span class="btn-text">PURCHASE</span>
-                                        </button>
-                                    </form>
-                                </div>
 
-                                <!-- КНОПКА УДАЛЕНИЯ -->
-                                {% if product.user == request.user %}
-                                    <div class="owner-control-zone">
-                                        <a href="{% url 'delete_product' product.id %}" class="admin-action-btn btn-reject-core">
-                                            [☠️] DESTROY COMMERCIAL ASSET
-                                        </a>
+                                    <div class="product-card-actions">
+                                        {% if user.is_authenticated %}
+                                            {% if product.seller == user %}
+                                                <a href="{% url 'edit_product' product.id %}" class="cyber-btn btn-edit-inline">
+                                                    <span class="btn-text">EDIT</span>
+                                                </a>
+                                                <a href="{% url 'delete_product' product.id %}" class="cyber-btn btn-delete-inline">
+                                                    <span class="btn-text">PURGE</span>
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url 'buy_product' product.id %}" class="cyber-btn btn-purchase">
+                                                    <span class="btn-scanlines"></span>
+                                                    <span class="btn-text">PURCHASE</span>
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
+                                            <a href="{% url 'login' %}" class="cyber-btn btn-purchase">
+                                                <span class="btn-scanlines"></span>
+                                                <span class="btn-text">LOGIN TO BUY</span>
+                                            </a>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
+                                </div>
                             </div>
                         </div>
                     </article>
@@ -225,13 +228,14 @@
             </div>
         </main>
     </div>
-    <!-- Контейнер для полноэкранного просмотра -->
-<div id="lightbox" class="lightbox-overlay">
-    <span class="close-lightbox">&times;</span>
-    <img class="lightbox-content" id="full-img">
-    <div id="caption"></div>
-</div>
+
+    <div id="lightbox" class="lightbox-overlay">
+        <span class="close-lightbox">&times;</span>
+        <img class="lightbox-content" id="full-img">
+        <div id="caption"></div>
+    </div>
 
     <script src="{% static 'js/shop.js' %}"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
 </body>
 </html>
