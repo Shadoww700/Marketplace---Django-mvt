@@ -41,27 +41,53 @@
                 </div>
             </div>
 
+                        {% if product.quantity > 0 %}
+
             <form method="POST" action="{% url 'buy_product' product.id %}" class="cyber-form-matrix">
+
                 {% csrf_token %}
 
                 <div class="form-group-cyber">
                     <label for="quantity" class="cyber-label">Quantity</label>
                     <div class="input-glow-wrapper">
-                        <input type="number" id="quantity" name="quantity" min="1" max="{{ product.quantity }}" value="1" class="cyber-input" required>
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            min="1"
+                            max="{{ product.quantity }}"
+                            value="1"
+                            class="cyber-input"
+                            required
+                        >
                     </div>
                 </div>
 
                 <div class="form-group-cyber">
                     <label for="address" class="cyber-label">Delivery Address</label>
                     <div class="input-glow-wrapper">
-                        <input type="text" id="address" name="address" class="cyber-input" placeholder="e.g., ул. Ленина 12, кв. 5, Душанбе" required>
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            class="cyber-input"
+                            placeholder="e.g., ул. Ленина 12, кв. 5, Душанбе"
+                            required
+                        >
                     </div>
                 </div>
 
                 <div class="form-group-cyber">
                     <label for="phone_number" class="cyber-label">Phone Number</label>
                     <div class="input-glow-wrapper">
-                        <input type="text" id="phone_number" name="phone_number" class="cyber-input" placeholder="e.g., +992 XX XXX XXXX" required>
+                        <input
+                            type="text"
+                            id="phone_number"
+                            name="phone_number"
+                            class="cyber-input"
+                            placeholder="+992 XX XXX XXXX"
+                            required
+                        >
                     </div>
                 </div>
 
@@ -71,11 +97,38 @@
                         <div class="btn-scanlines"></div>
                     </button>
                     <div class="auth-footer">
-                        <a href="{% url 'shop_home' %}" class="cancel-link">Abort Transaction</a>
+                        <a href="{% url 'shop_home' %}" class="cancel-link">
+                            Abort Transaction
+                        </a>
                     </div>
                 </div>
+                
             </form>
-        </div>
-    </div>
-</body>
+            {% else %}
+            <div class="cyber-alert-box alert-critical">
+                <span class="alert-title">
+                    [ OUT OF STOCK ]
+                </span>
+                <p class="alert-desc">
+                    This product is no longer available.
+                </p>
+            </div>
+            <div style="margin-top:25px">
+                <a href="{% url 'shop_home' %}" class="cyber-btn btn-matrix-glow">
+                    Back to Market
+                </a>
+            </div>
+        {% endif %}
+                
+
+        {% if product.quantity > 0 %}
+            <span class="log-stock">
+                Stock: {{ product.quantity }} units
+            </span>
+        {% else %}
+            <span class="log-stock" style="color:#ff4d4d;font-weight:700;">
+                ❌ OUT OF STOCK
+            </span>
+        {% endif %}
+    </body>
 </html>
