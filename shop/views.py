@@ -313,6 +313,7 @@ def buy_product_view(req, product_id):
         )
 
         product.quantity -= quantity_to_buy
+        product.save()
         
 
     return redirect('profile_dashboard')
