@@ -183,7 +183,7 @@
                             <p class="product-description">{{ product.description|truncatewords:15 }}</p>
 
                             <p class="product-seller-tag">
-                                VENDOR: <a href="{% url 'seller_profile' product.seller.id %}" class="product-seller-link">{{ product.seller.username }}</a>
+                                SELLER PROFILE: <a href="{% url 'seller_profile' product.seller.id %}" class="product-seller-link">{{ product.seller.username }}</a>
                             </p>
                             
                             <div class="product-footer-matrix">
@@ -205,7 +205,7 @@
                                             {% else %}
                                                 <a href="{% url 'buy_product' product.id %}" class="cyber-btn btn-purchase">
                                                     <span class="btn-scanlines"></span>
-                                                    <span class="btn-text">PURCHASE</span>
+                                                    <span class="btn-text">Buy</span>
                                                 </a>
                                             {% endif %}
                                         {% else %}
