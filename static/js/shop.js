@@ -68,3 +68,21 @@ document.addEventListener('DOMContentLoaded', () => {
         lightbox.style.display = 'none';
     });
 });
+
+let lastScroll = 0;
+
+const header = document.querySelector(".main-header");
+
+window.addEventListener("scroll", () => {
+
+    const current = window.scrollY;
+
+    if (current > lastScroll && current > 100) {
+        header.classList.add("header-hidden");
+    } else {
+        header.classList.remove("header-hidden");
+    }
+
+    lastScroll = current;
+
+});
